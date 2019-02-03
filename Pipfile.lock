@@ -1,0 +1,81 @@
+{
+    "_meta": {
+        "hash": {
+            "sha256": "7f871f480612f914dacbed71a1affdfff299bea00a4798f4574326fc644dc39e"
+        },
+        "pipfile-spec": 6,
+        "requires": {
+            "python_version": "2.7"
+        },
+        "sources": [
+            {
+                "name": "pypi",
+                "url": "https://pypi.org/simple",
+                "verify_ssl": true
+            }
+        ]
+    },
+    "default": {
+        "blessings": {
+            "hashes": [
+                "sha256:98e5854d805f50a5b58ac2333411b0482516a8210f23f43308baeb58d77c157d",
+                "sha256:b1fdd7e7a675295630f9ae71527a8ebc10bfefa236b3d6aa4932ee4462c17ba3",
+                "sha256:caad5211e7ba5afe04367cdd4cfc68fa886e2e08f6f35e76b7387d2109ccea6e"
+            ],
+            "version": "==1.7"
+        },
+        "click": {
+            "hashes": [
+                "sha256:2335065e6395b9e67ca716de5f7526736bfa6ceead690adf616d925bdc622b13",
+                "sha256:5b94b49521f6456670fdb30cd82a4eca9412788a93fa6dd6df72c94d5a8ff2d7"
+            ],
+            "index": "pypi",
+            "version": "==7.0"
+        },
+        "mozdevice": {
+            "hashes": [
+                "sha256:0dcb11ea1b7c4d7db583392cb38b851124f7d46f5fd677d89d1fcbd9a01c67d4",
+                "sha256:765f4d3ad09a2be36f2fe74edc240cb133de902a58722ebeba47ed7587226321"
+            ],
+            "index": "pypi",
+            "version": "==2.0.1"
+        },
+        "mozfile": {
+            "hashes": [
+                "sha256:22a43f3bc320c3bda27e54b293c23a51660f4a00ec6959ab70ca6136d702f578",
+                "sha256:7355643fca705f43d9412d444fb59588fbbd25f0d1e7592b9482f84e3d23bc8e"
+            ],
+            "version": "==2.0.0"
+        },
+        "mozlog": {
+            "hashes": [
+                "sha256:b9010d086e82eb15b321c45484675ee5f84f927d734926b6cfe119688d3d3b31",
+                "sha256:bcf77608ca230309b3809ca6f31b89d1d24440148f03525fd6e7b1b54065cf17"
+            ],
+            "version": "==3.10"
+        },
+        "mozprofile": {
+            "hashes": [
+                "sha256:49d13b578cec1c853320aff274720b69854948ecbd70aca7c9fb34f6802565c4",
+                "sha256:5564f2e190b96b037f3494ad91d4a7f1d8294243793107ab933213d05c245c1f"
+            ],
+            "index": "pypi",
+            "version": "==2.1.0"
+        },
+        "mozterm": {
+            "hashes": [
+                "sha256:b1e91acec188de07c704dbb7b0100a7be5c1e06567b3beb67f6ea11d00a483a4",
+                "sha256:f5eafa25c23d391e2a2bb1dd45ee928fc9e3c811977a3856b5a5a0778011053c"
+            ],
+            "version": "==1.0.0"
+        },
+        "six": {
+            "hashes": [
+                "sha256:3350809f0555b11f552448330d0b52d5f24c91a322ea4a15ef22629740f3761c",
+                "sha256:d16a0141ec1a18405cd4ce8b4613101da75da0e9a7aec5bdd4fa804d0e0eba73"
+            ],
+            "version": "==1.12.0"
+        }
+    },
+    "develop": {}
+}
