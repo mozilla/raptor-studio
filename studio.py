@@ -2,6 +2,8 @@ import os
 import subprocess
 
 import click
+import click_config_file
+
 from mozdevice import ADBAndroid
 from mozprofile import create_profile
 
@@ -11,6 +13,7 @@ from mozprofile import create_profile
 @click.option("--certutil", required=True, help="Path to certutil.")
 @click.option("--url", default="about:blank", help="Site to load.")
 @click.argument("path")
+@click_config_file.configuration_option()
 def cli(record, certutil, url, path):
     # create profile
     profile = create_profile("firefox")
