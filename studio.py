@@ -1,4 +1,5 @@
 import os
+import sys
 import subprocess
 
 import click
@@ -24,7 +25,14 @@ def cli(record, certutil, url, path):
 
     # start mitmdump
     scripts = os.path.join(os.getcwd(), "scripts")
-    mitmdump = os.path.join(os.getcwd(), "utils", "mitmdump")
+
+
+    if 'linux' in sys.platform:
+        mitmdump = os.path.join(os.getcwd(), "utils", "mitmdump-linux")
+    elif 'darwin' in sys.platform:
+        mitmdump = os.path.join(os.getcwd(), "utils", "mitmdump-osx")
+    elif 'win' in sys.platform:
+        mitmdump = os.path.join(os.getcwd(), "utils", "mitmdump-win.exe")
 
     if record:
         command = [mitmdump, "--wfile", path]
