@@ -9,6 +9,7 @@ verify_ssl = true
 mozprofile = "*"
 mozdevice = "*"
 click = "*"
+click-config-file = "*"
 
 [requires]
 python_version = "2.7"

@@ -6,6 +6,7 @@
 A simple command line tool for recording and replaying web traffic for Raptor. Currently
 limited to record/replay on the GeckoView example app for Android.
 
+
 ## Installation
 
 ```
@@ -17,6 +18,26 @@ $ pipenv install
 ```
 $ pipenv run python studio.py --help
 ```
+
+
+## Config file
+Create config file ex. *config.cfg*
+
+```
+certutil=""
+url=""
+path=""
+```
+
+Run using:
+```
+$ pipenv run python studio.py --config config.cfg --replay
+```
+Note: 
+
+Config file settings will override the default settings
+
+Command line setting will override the config file settings
 
 # Resources
 
