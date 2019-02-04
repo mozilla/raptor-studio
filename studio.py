@@ -28,11 +28,9 @@ def cli(record, certutil, url, path):
     else:
         command = [
             mitmdump,
-            "--script",
-            os.path.join(scripts, "alternate-server-replay.py"),
             "--replay-kill-extra",
-            "--server-replay",
-            path,
+            "--script",
+            " ".join([os.path.join(scripts, "alternate-server-replay.py"), path]),
         ]
 
     try:
