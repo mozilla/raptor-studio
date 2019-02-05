@@ -69,6 +69,7 @@ def cli(record, certutil, url, path):
 
         # setup device
         device = ADBAndroid()
+        device.shell("pm clear org.mozilla.geckoview_example")
         device.create_socket_connection("reverse", "tcp:8080", "tcp:8080")
 
         device_storage = "/sdcard/raptor"
