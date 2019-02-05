@@ -26,12 +26,11 @@ def cli(record, certutil, url, path):
     # start mitmdump
     scripts = os.path.join(os.getcwd(), "scripts")
 
-
-    if 'linux' in sys.platform:
+    if "linux" in sys.platform:
         mitmdump = os.path.join(os.getcwd(), "utils", "mitmdump-linux")
-    elif 'darwin' in sys.platform:
+    elif "darwin" in sys.platform:
         mitmdump = os.path.join(os.getcwd(), "utils", "mitmdump-osx")
-    elif 'win' in sys.platform:
+    elif "win" in sys.platform:
         mitmdump = os.path.join(os.getcwd(), "utils", "mitmdump-win.exe")
 
     if record:
@@ -76,8 +75,9 @@ def cli(record, certutil, url, path):
         assert "mitmproxy-cert" in subprocess.check_output(command)
 
         # setup device
+        app_name = "org.mozilla.geckoview_example"
         device = ADBAndroid()
-        device.shell("pm clear org.mozilla.geckoview_example")
+        device.shell("pm clear {}".format(app_name))
         device.create_socket_connection("reverse", "tcp:8080", "tcp:8080")
 
         device_storage = "/sdcard/raptor"
@@ -122,7 +122,6 @@ def cli(record, certutil, url, path):
         ]
 
         # start app
-        app_name = "org.mozilla.geckoview_example"
         activity_name = "GeckoViewActivity"
         device.stop_application(app_name)
         device.launch_activity(
