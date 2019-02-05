@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "7f871f480612f914dacbed71a1affdfff299bea00a4798f4574326fc644dc39e"
+            "sha256": "c526c910ef3bec8fb9f4c6daf9f2a4558254554866c3fa1366918e8f98e229d3"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -31,6 +31,20 @@
             ],
             "index": "pypi",
             "version": "==7.0"
+        },
+        "click-config-file": {
+            "hashes": [
+                "sha256:0c6c7598a9f7121394f2e3896ee8c6f4c9c2d3e7c19ee619652897885e1a9e3a",
+                "sha256:b467bb4a7e3227ce349bd776062466c89ea6bdab39f4e54a179b52a0cc9c2a08"
+            ],
+            "index": "pypi",
+            "version": "==0.4.3"
+        },
+        "configobj": {
+            "hashes": [
+                "sha256:a2f5650770e1c87fb335af19a9b7eb73fc05ccf22144eb68db7d00cd2bcb0902"
+            ],
+            "version": "==5.0.6"
         },
         "mozdevice": {
             "hashes": [
