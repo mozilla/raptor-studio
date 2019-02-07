@@ -57,6 +57,10 @@ def cli(record, certutil, url, browser_name, browser_path, path):
         mitmdump_process = subprocess.Popen(command)
 
         if browser_name == "geckoview_example":
+
+            if 'mozilla-central/obj' in certutil:
+                os.environ['LD_LIBRARY_PATH'] = os.path.dirname(certutil)
+
             # create certificate database
             certdb = "sql:{}/".format(profile.profile)
             print("Creating certificate database")
