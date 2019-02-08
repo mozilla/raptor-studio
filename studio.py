@@ -5,8 +5,9 @@ import subprocess
 import click
 import click_config_file
 
-
 from mozdevice import ADBAndroid
+from mozprocess import ProcessHandler
+
 from mozprofile import create_profile
 
 from selenium import webdriver
@@ -16,6 +17,7 @@ from selenium.webdriver import FirefoxProfile
 @click.command()
 @click.option("--record/--replay", default=False)
 @click.option("--certutil", required=True, help="Path to certutil.")
+@click.option("--deterministic", required=True, help="Use deterministic JS in the recording")
 @click.option("--url", default="about:blank", help="Site to load.")
 
 @click.option("--browser_name", default="geckoview_example", help="Browser to start.")
@@ -23,7 +25,7 @@ from selenium.webdriver import FirefoxProfile
 
 @click.argument("path")
 @click_config_file.configuration_option()
-def cli(record, certutil, url, browser_name, browser_path, path):
+def cli(record, certutil, deterministic, url, browser_name, browser_path, path):
     # create profile
     profile = create_profile("firefox")
     print("Created profile: {}".format(profile.profile))
@@ -32,6 +34,7 @@ def cli(record, certutil, url, browser_name, browser_path, path):
     cert = os.path.join(mitmproxy_home, "mitmproxy-ca-cert.cer")
 
     driver = None
+
     # start mitmdump
     scripts = os.path.join(os.getcwd(), "scripts")
 
@@ -43,18 +46,23 @@ def cli(record, certutil, url, browser_name, browser_path, path):
         mitmdump = os.path.join(os.getcwd(), "utils", "mitmdump-win.exe")
 
     if record:
-        command = [mitmdump, "--wfile", path]
+        if deterministic:
+            command = [mitmdump,"--wfile", path, "--script", "".join([os.path.join(scripts, "inject-deterministic-js.py")])]
+        else:
+            command = [mitmdump, "--wfile", path]
     else:
         command = [
-            mitmdump,
+            "mitmdump",
             "--replay-kill-extra",
             "--script",
             " ".join([os.path.join(scripts, "alternate-server-replay.py"), path]),
         ]
 
     try:
-        print(command)
-        mitmdump_process = subprocess.Popen(command)
+        print(" ".join(command))
+        mitmdump_process = ProcessHandler(command)
+
+        mitmdump_process.run()
 
         if browser_name == "geckoview_example":
 
@@ -163,14 +171,17 @@ def cli(record, certutil, url, browser_name, browser_path, path):
 
             driver.get(url)
 
-        # wait for mitmdump to finish
-        mitmdump_process.wait()
+        # # wait for mitmdump to finish
+        # mitmdump_process.wait()
+        input("What is your name? ")
 
     finally:
-        if mitmdump_process is None:
-            mitmdump_process.terminate()
         if not driver is None:
             driver.quit()
+
+        if mitmdump_process is None:
+            mitmdump_process.kill()
+
         exit(mitmdump_process.returncode)
 
 
