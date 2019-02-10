@@ -3,8 +3,7 @@
 
 # Raptor Studio
 
-A simple command line tool for recording and replaying web traffic for Raptor. Currently
-limited to record/replay on the GeckoView example app for Android.
+A simple command line tool for recording and replaying web traffic for Raptor.
 
 
 ## Installation
@@ -33,7 +32,7 @@ Run using:
 ```
 $ pipenv run python studio.py --config config.cfg --replay
 ```
-Note: 
+Note:
 
 Config file settings will override the default settings
 

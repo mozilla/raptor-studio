@@ -1,19 +1,24 @@
 import click
 import click_config_file
 
-from apps import GeckoViewExample
+from apps import Firefox, GeckoViewExample
 from mitmproxy import MITMProxy
+
+APPS = {"Firefox": Firefox, "GeckoViewExample": GeckoViewExample}
 
 
 @click.command()
+@click.option(
+    "--app", required=True, type=click.Choice(APPS.keys()), help="App to launch."
+)
 @click.option("--record/--replay", default=False)
 @click.option("--certutil", required=True, help="Path to certutil.")
 @click.option("--url", default="about:blank", help="Site to load.")
 @click.argument("path")
 @click_config_file.configuration_option()
-def cli(record, certutil, url, path):
+def cli(app, record, certutil, url, path):
     with MITMProxy(path, record) as proxy:
-        app = GeckoViewExample(certutil, proxy.cert)
+        app = APPS[app](proxy, certutil)
         app.start(url)
 
 

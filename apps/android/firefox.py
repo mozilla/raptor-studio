@@ -5,9 +5,9 @@ from mozdevice import ADBAndroid
 from mozprofile import create_profile
 
 
-class FirefoxAndroid(object):
-    def __init__(self, certutil, certificate):
-        self.certificate = certificate
+class AndroidFirefox(object):
+    def __init__(self, proxy, certutil):
+        self.proxy = proxy
         self.certutil = certutil
 
     def start(self, url="about:blank"):
@@ -33,9 +33,9 @@ class FirefoxAndroid(object):
             "TC,,",
             "-a",
             "-i",
-            self.certificate,
+            self.proxy.cert,
         ]
-        print("Installing {} into certificate database".format(self.certificate))
+        print("Installing {} into certificate database".format(self.proxy.cert))
         subprocess.call(command)
 
         # verify certificate is installed
