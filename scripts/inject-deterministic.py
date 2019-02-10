@@ -7,6 +7,9 @@ from mitmproxy import ctx
 
 
 class AddDeterministic:
+    def __init__(self):
+        ctx.log.info("Load Deterministic JS")
+
     def get_csp_directives(self, headers):
         csp = headers.get("Content-Security-Policy", "")
         return [d.strip() for d in csp.split(";")]
@@ -179,6 +182,4 @@ class AddDeterministic:
                         )
 
 
-def start():
-    ctx.log.info("Load Deterministic JS")
-    return AddDeterministic()
+addons = [AddDeterministic()]
