@@ -34,7 +34,7 @@
   var orig_date = Date;
   // Time since epoch in milliseconds. This is replaced by script injector with
   // the date when the recording is done.
-  var time_seed = {{REPLACE_LOAD_TIMESTAMP}};
+  var time_seed = REPLACE_LOAD_TIMESTAMP;
   Date = function() {
     if (this instanceof Date) {
       date_count++;
