@@ -23,7 +23,16 @@ class MITMProxy(object):
 
     def __enter__(self):
         if self.record:
-            command = [self.binary, "--wfile", self.path]
+            command = [
+                self.binary,
+                "--wfile",
+                self.path,
+                "--script",
+                " ".join(
+                    [
+                        os.path.join(self.scripts, "inject-deterministic.py")]
+                )
+            ]
         else:
             command = [
                 self.binary,
