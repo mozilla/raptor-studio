@@ -6,7 +6,6 @@ class DesktopFirefox(object):
         self.proxy = proxy
 
     def start(self, url="about:blank"):
-        print("START")
         profile = FirefoxProfile()
         profile.set_preference("network.proxy.type", 1)
         profile.set_preference("network.proxy.http", "127.0.0.1")
