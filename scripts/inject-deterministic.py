@@ -7,6 +7,13 @@ from mitmproxy import ctx
 
 
 class AddDeterministic:
+
+    def __init__(self):
+        ctx.log.info("Init Deterministic JS")
+
+    def load(self, loader):
+        ctx.log.info("Load Deterministic JS")
+
     def get_csp_directives(self, headers):
         csp = headers.get("Content-Security-Policy", "")
         return [d.strip() for d in csp.split(";")]
@@ -141,8 +148,8 @@ class AddDeterministic:
                             ctx.log.info("nonce : %s" % nonce)
 
                             if (
-                                self.get_csp_script_sources(flow.response.headers)
-                                and not nonce
+                                    self.get_csp_script_sources(flow.response.headers)
+                                    and not nonce
                             ):
                                 # generate sha256 for the script
                                 hash_object = hashlib.sha256(js.encode("utf-8"))
@@ -160,9 +167,9 @@ class AddDeterministic:
 
                         # generate new html file
                         new_html = (
-                            html[:script_index]
-                            + self.get_script_with_nonce(js, nonce)
-                            + html[script_index:]
+                                html[:script_index]
+                                + self.get_script_with_nonce(js, nonce)
+                                + html[script_index:]
                         )
                         flow.response.text = new_html
 
@@ -179,6 +186,4 @@ class AddDeterministic:
                         )
 
 
-def start():
-    ctx.log.info("Load Deterministic JS")
-    return AddDeterministic()
+addons = [AddDeterministic()]

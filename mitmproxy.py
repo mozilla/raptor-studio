@@ -1,6 +1,6 @@
 import os
-import sys
 import subprocess
+import sys
 
 
 class MITMProxy(object):
@@ -19,29 +19,28 @@ class MITMProxy(object):
             name = "mitmdump-osx"
         elif "win" in sys.platform:
             name = "mitmdump-win.exe"
+
         return os.path.join(os.getcwd(), "utils", name)
 
     def __enter__(self):
+
         if self.record:
             command = [
                 self.binary,
-                "--wfile",
+                "--save-stream-file",
                 self.path,
-                "--script",
-                " ".join([os.path.join(self.scripts, "inject-deterministic.py")]),
+                "--scripts",
+                os.path.join(self.scripts, "inject-deterministic.py"),
             ]
         else:
             command = [
                 self.binary,
-                "--replay-kill-extra",
-                "--script",
-                " ".join(
-                    [
-                        os.path.join(self.scripts, "alternate-server-replay.py"),
-                        self.path,
-                    ]
-                ),
+                "--scripts",
+                os.path.join(self.scripts, "alternate-server-replay-4.0.4.py"),
+                "--set",
+                "server_replay={}".format(self.path)
             ]
+
         self.process = subprocess.Popen(command)
         return self
 

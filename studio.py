@@ -17,7 +17,7 @@ APPS = {"Firefox": Firefox, "GeckoViewExample": GeckoViewExample, "Chrome": Chro
 @click.argument("path")
 @click_config_file.configuration_option()
 def cli(app, record, certutil, url, path):
-    with MITMProxy(path, record) as proxy:
+    with MITMProxy(path=path, record=record) as proxy:
         app = APPS[app](proxy, certutil)
         app.start(url)
 
