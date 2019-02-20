@@ -1,5 +1,6 @@
-from android.firefox import AndroidFirefox
-from desktop.firefox import DesktopFirefox as Firefox
+from .android.firefox import AndroidFirefox
+from .desktop.firefox import DesktopFirefox as Firefox
+from .desktop.chrome import DesktopChrome as Chrome
 
 
 class GeckoViewExample(AndroidFirefox):

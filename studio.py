@@ -1,10 +1,10 @@
 import click
 import click_config_file
 
-from apps import Firefox, GeckoViewExample
+from apps import Firefox, GeckoViewExample, Chrome
 from mitmproxy import MITMProxy
 
-APPS = {"Firefox": Firefox, "GeckoViewExample": GeckoViewExample}
+APPS = {"Firefox": Firefox, "GeckoViewExample": GeckoViewExample, "Chrome": Chrome}
 
 
 @click.command()
