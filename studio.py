@@ -12,7 +12,7 @@ APPS = {"Firefox": Firefox, "GeckoViewExample": GeckoViewExample, "Chrome": Chro
     "--app", required=True, type=click.Choice(APPS.keys()), help="App to launch."
 )
 @click.option("--record/--replay", default=False)
-@click.option("--certutil", required=True, help="Path to certutil.")
+@click.option("--certutil", help="Path to certutil.")
 @click.option("--url", default="about:blank", help="Site to load.")
 @click.argument("path")
 @click_config_file.configuration_option()
