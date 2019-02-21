@@ -112,13 +112,8 @@ class AddDeterministic():
             if 'text/html' in flow.response.headers["content-type"]:
                 ctx.log.info("Working on {}".format(flow.response.headers["content-type"]))
 
-                if "charset=" in flow.response.headers["content-type"]:
-                    encoding = flow.response.headers["content-type"].split("charset=")[1]
-                else:
-                    encoding = "latin-1"
-
                 flow.response.decode()
-                html = bytes(flow.response.content).decode(encoding)
+                html = flow.response.text
 
                 with open("scripts/catapult/deterministic.js", "r") as jsfile:
                     js = jsfile.read().replace("REPLACE_LOAD_TIMESTAMP", str(millis))
@@ -153,7 +148,7 @@ class AddDeterministic():
 
                         # generate new html file
                         new_html = html[:script_index] + self.get_script_with_nonce(js, nonce) + html[script_index:]
-                        flow.response.content = bytes(new_html, encoding)
+                        flow.response.text = new_html
 
                         ctx.log.info("In request {} injected deterministic JS".format(flow.request.url))
                     else:
