@@ -1,4 +1,3 @@
-# from __future__ import absolute_import, print_function
 import base64
 import hashlib
 import re
@@ -71,14 +70,14 @@ class AddDeterministic():
         sources = self.get_csp_script_sources(headers)
         add_unsafe = True
 
-        for token in self.get_csp_script_sources(headers):
+        for token in sources:
             if token == "'unsafe-inline'":
                 add_unsafe = False
                 ctx.log.info("Contains unsafe-inline")
             elif token.startswith("'sha"):
                 sources.append("'sha256-{}'".format(sha256))
                 add_unsafe = False
-                ctx.log.info("Add she hash directive")
+                ctx.log.info("Add sha hash directive")
                 break
 
         if add_unsafe:
@@ -124,9 +123,6 @@ class AddDeterministic():
                 with open("scripts/catapult/deterministic.js", "r") as jsfile:
                     js = jsfile.read().replace("REPLACE_LOAD_TIMESTAMP", str(millis))
 
-                    # remove comments from js file
-                    js = re.sub(re.compile("//.*?\n"), "", js)
-
                     if js not in html:
                         script_index = re.search('(?i).*?<head.*?>', html)
                         if script_index is None:
@@ -147,9 +143,7 @@ class AddDeterministic():
                             if self.get_csp_script_sources(flow.response.headers) and not nonce:
                                 # generate sha256 for the script
                                 hash_object = hashlib.sha256(js.encode('utf-8'))
-                                script_sha256 = "{}".format(
-                                    base64.b64encode(hash_object.digest())
-                                ).replace("b'", "").rstrip("'")
+                                script_sha256 = base64.b64encode(hash_object.digest()).decode("utf-8")
 
                                 # generate the new response headers
                                 updated_script_sources = self.update_csp_script_src(flow.response.headers,
