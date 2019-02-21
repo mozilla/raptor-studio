@@ -28,10 +28,7 @@ class MITMProxy(object):
                 "--wfile",
                 self.path,
                 "--script",
-                " ".join(
-                    [
-                        os.path.join(self.scripts, "inject-deterministic.py")]
-                )
+                " ".join([os.path.join(self.scripts, "inject-deterministic.py")]),
             ]
         else:
             command = [

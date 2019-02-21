@@ -7,7 +7,6 @@ class DesktopFirefox(object):
 
     def start(self, url="about:blank"):
         options = FirefoxOptions()
-
         options.set_preference("network.proxy.type", 1)
         options.set_preference("network.proxy.http", "127.0.0.1")
         options.set_preference("network.proxy.http_port", 8080)
