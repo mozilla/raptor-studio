@@ -12,7 +12,7 @@ class MITMProxy(object):
         self.scripts = os.path.join(os.getcwd(), "scripts")
 
     def __enter__(self):
-        subprocess.call([self.binary, "--version"])
+        # subprocess.call([self.binary, "--version"], os.environ)
 
         if self.record:
             command = [
@@ -28,10 +28,9 @@ class MITMProxy(object):
                 "--scripts",
                 os.path.join(self.scripts, "serverplayback404.py"),
                 "--set",
-                f"server_replay={self.path}",
-                "--set",
-                f"server_replay_404_extra=true",
+                "server_replay={}".format(self.path),
             ]
+        print(" ".join(command))
         self.process = subprocess.Popen(command)
         return self
 

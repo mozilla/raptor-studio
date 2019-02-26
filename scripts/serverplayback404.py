@@ -1,24 +1,34 @@
+# This file was copied from  mitmproxy/mitmproxy/addons/serverplayback.py release tag 4.0.4
+# and modified by Florin Strugariu
+
+# Altered features:
+# * returns 404 rather than dropping the whole HTTP/2 connection on the floor
+# * remove the replay packages that don't have any content in their response package
+
 import hashlib
 import urllib
-import typing
 
-from mitmproxy import ctx
-from mitmproxy import flow
-from mitmproxy import exceptions
-from mitmproxy import http
-from mitmproxy import io
-from mitmproxy import command
 import mitmproxy.types
+import typing
+from mitmproxy import command
+from mitmproxy import ctx, http
+from mitmproxy import exceptions
+from mitmproxy import flow
+from mitmproxy import io
 
 
-class ServerPlayback404:
+class AlternateServerPlayback:
+
     def __init__(self):
+        ctx.master.addons.remove(ctx.master.addons.get("serverplayback"))
         self.flowmap = {}
         self.configured = False
 
     def load(self, loader):
+        ctx.log.info("load options")
         loader.add_option(
-            "server_replay_404_extra", bool, False, "404 extra requests during replay."
+            "server_replay", typing.Sequence[str], [],
+            "Replay server responses from a saved file."
         )
 
     @command.command("replay.server")
@@ -28,9 +38,15 @@ class ServerPlayback404:
         """
         self.flowmap = {}
         for i in flows:
-            if i.response:  # type: ignore
+            # Check that response has data.content. If response has no content a
+            # HttpException("Cannot assemble flow with missing content") will get raised
+            if i.response and i.response.data.content:
                 l = self.flowmap.setdefault(self._hash(i), [])
                 l.append(i)
+            else:
+                ctx.log.info(
+                    "Request %s has no response data content. Removing from request list" %
+                    i.request.url)
         ctx.master.addons.trigger("update", [])
 
     @command.command("replay.server.file")
@@ -62,48 +78,17 @@ class ServerPlayback404:
         _, _, path, _, query, _ = urllib.parse.urlparse(r.url)
         queriesArray = urllib.parse.parse_qsl(query, keep_blank_values=True)
 
-        key: typing.List[typing.Any] = [
-            str(r.port),
-            str(r.scheme),
-            str(r.method),
-            str(path),
-        ]
-        if not ctx.options.server_replay_ignore_content:
-            if ctx.options.server_replay_ignore_payload_params and r.multipart_form:
-                key.extend(
-                    (k, v)
-                    for k, v in r.multipart_form.items(multi=True)
-                    if k.decode(errors="replace")
-                    not in ctx.options.server_replay_ignore_payload_params
-                )
-            elif ctx.options.server_replay_ignore_payload_params and r.urlencoded_form:
-                key.extend(
-                    (k, v)
-                    for k, v in r.urlencoded_form.items(multi=True)
-                    if k not in ctx.options.server_replay_ignore_payload_params
-                )
-            else:
-                key.append(str(r.raw_content))
+        key: typing.List[typing.Any] = [str(r.port), str(r.scheme), str(r.method), str(path)]
+        key.append(str(r.raw_content))
+        key.append(r.host)
 
-        if not ctx.options.server_replay_ignore_host:
-            key.append(r.host)
-
-        filtered = []
-        ignore_params = ctx.options.server_replay_ignore_params or []
         for p in queriesArray:
-            if p[0] not in ignore_params:
-                filtered.append(p)
-        for p in filtered:
             key.append(p[0])
             key.append(p[1])
 
-        if ctx.options.server_replay_use_headers:
-            headers = []
-            for i in ctx.options.server_replay_use_headers:
-                v = r.headers.get(i)
-                headers.append((i, v))
-            key.append(headers)
-        return hashlib.sha256(repr(key).encode("utf8", "surrogateescape")).digest()
+        return hashlib.sha256(
+            repr(key).encode("utf8", "surrogateescape")
+        ).digest()
 
     def next_flow(self, request):
         """
@@ -112,21 +97,12 @@ class ServerPlayback404:
         """
         hsh = self._hash(request)
         if hsh in self.flowmap:
-            if ctx.options.server_replay_nopop:
-                return self.flowmap[hsh][0]
-            else:
-                ret = self.flowmap[hsh].pop(0)
-                if not self.flowmap[hsh]:
-                    del self.flowmap[hsh]
-                return ret
+            return self.flowmap[hsh][-1]
 
     def configure(self, updated):
         if not self.configured and ctx.options.server_replay:
             self.configured = True
             try:
-                ctx.log.info(
-                    "Replaying from files: {}".format(ctx.options.server_replay)
-                )
                 flows = io.read_flows_from_paths(ctx.options.server_replay)
             except exceptions.FlowReadException as e:
                 raise exceptions.OptionsError(str(e))
@@ -138,16 +114,19 @@ class ServerPlayback404:
             if rflow:
                 response = rflow.response.copy()
                 response.is_replay = True
-                if ctx.options.server_replay_refresh:
-                    response.refresh()
+                # Refresh server replay responses by adjusting date, expires and
+                # last-modified headers, as well as adjusting cookie expiration.
+                response.refresh()
+
                 f.response = response
-            elif ctx.options.server_replay_404_extra:
+            else:
+                # returns 404 rather than dropping the whole HTTP/2 connection
                 ctx.log.warn(
-                    "server_playback: 404 non-replay request {}".format(f.request.url)
+                    "server_playback: killed non-replay request {}".format(
+                        f.request.url
+                    )
                 )
-                f.response = http.HTTPResponse.make(
-                    404, b"", {"content-type": "text/plain"}
-                )
+                f.response = http.HTTPResponse.make(404, b'', {'content-type': 'text/plain'})
 
 
-addons = [ServerPlayback404()]
+addons = [AlternateServerPlayback()]

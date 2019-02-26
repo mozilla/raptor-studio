@@ -40,7 +40,7 @@ class AndroidFirefox(object):
 
         # verify certificate is installed
         command = [self.certutil, "-d", certdb, "-L"]
-        assert "mitmproxy-cert" in subprocess.check_output(command)
+        assert "mitmproxy-cert" in subprocess.check_output(command).decode()
 
         # setup device
         device = ADBAndroid()
