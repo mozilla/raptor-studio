@@ -1,5 +1,3 @@
-import time
-
 import click
 import click_config_file
 
