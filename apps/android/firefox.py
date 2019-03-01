@@ -11,7 +11,7 @@ class AndroidFirefox(object):
         self.certutil = certutil
         self.device = ADBAndroid()
 
-    def start(self, url="about:blank", record=None):
+    def start(self, url="about:blank"):
         # create profile
         profile = create_profile("firefox")
         print("Created profile: {}".format(profile.profile))
