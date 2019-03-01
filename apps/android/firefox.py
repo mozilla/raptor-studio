@@ -1,6 +1,5 @@
 import os
 import subprocess
-import time
 
 from mozdevice import ADBAndroid
 from mozprofile import create_profile
@@ -13,8 +12,6 @@ class AndroidFirefox(object):
         self.device = ADBAndroid()
 
     def start(self, url="about:blank", record=None):
-        # os.environ['LD_LIBRARY_PATH'] = "/home/alexandru.ionescu/workspace/mozilla-central/obj-x86_64-pc-linux-gnu/dist/bin/"
-
         # create profile
         profile = create_profile("firefox")
         print("Created profile: {}".format(profile.profile))
