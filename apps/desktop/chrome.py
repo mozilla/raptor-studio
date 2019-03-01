@@ -12,5 +12,10 @@ class DesktopChrome(object):
         options.add_argument("--ignore-certificate-errors")
         options.add_argument("--no-default-browser-check")
 
-        driver = Chrome(options=options)
-        driver.get(url)
+        self.driver = Chrome(options=options)
+        self.driver.get(url)
+
+    def take_screenshot(self, record, path):
+        print("Getting Screenshot")
+        sshot_suffix = "record" if record else "replay"
+        self.driver.save_screenshot("{}_{}.png".format(path, sshot_suffix))

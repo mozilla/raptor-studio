@@ -14,5 +14,10 @@ class DesktopFirefox(object):
         options.set_preference("network.proxy.ssl_port", 8080)
         options.set_preference("security.csp.enable", True)
 
-        driver = Firefox(options=options)
-        driver.get(url)
+        self.driver = Firefox(options=options)
+        self.driver.get(url)
+
+    def take_screenshot(self, record, path):
+        print("Getting Screenshot")
+        sshot_suffix = "record" if record else "replay"
+        self.driver.save_screenshot("{}_{}.png".format(path, sshot_suffix))

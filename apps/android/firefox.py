@@ -1,5 +1,6 @@
 import os
 import subprocess
+import time
 
 from mozdevice import ADBAndroid
 from mozprofile import create_profile
@@ -9,8 +10,11 @@ class AndroidFirefox(object):
     def __init__(self, proxy, certutil):
         self.proxy = proxy
         self.certutil = certutil
+        self.device = ADBAndroid()
 
-    def start(self, url="about:blank"):
+    def start(self, url="about:blank", record=None):
+        # os.environ['LD_LIBRARY_PATH'] = "/home/alexandru.ionescu/workspace/mozilla-central/obj-x86_64-pc-linux-gnu/dist/bin/"
+
         # create profile
         profile = create_profile("firefox")
         print("Created profile: {}".format(profile.profile))
@@ -43,16 +47,15 @@ class AndroidFirefox(object):
         assert "mitmproxy-cert" in subprocess.check_output(command)
 
         # setup device
-        device = ADBAndroid()
-        device.shell("pm clear {}".format(self.APP_NAME))
-        device.create_socket_connection("reverse", "tcp:8080", "tcp:8080")
+        self.device.shell("pm clear {}".format(self.APP_NAME))
+        self.device.create_socket_connection("reverse", "tcp:8080", "tcp:8080")
 
         device_storage = "/sdcard/raptor"
         device_profile = os.path.join(device_storage, "profile")
-        if device.is_dir(device_storage):
-            device.rm(device_storage, recursive=True)
-        device.mkdir(device_storage)
-        device.mkdir(device_profile)
+        if self.device.is_dir(device_storage):
+            self.device.rm(device_storage, recursive=True)
+        self.device.mkdir(device_storage)
+        self.device.mkdir(device_profile)
 
         userjs = os.path.join(profile.profile, "user.js")
         with open(userjs) as f:
@@ -74,8 +77,8 @@ class AndroidFirefox(object):
             }
         )
 
-        device.push(profile.profile, device_profile)
-        device.chmod(device_storage, recursive=True)
+        self.device.push(profile.profile, device_profile)
+        self.device.chmod(device_storage, recursive=True)
 
         app_args = [
             "-profile",
@@ -90,8 +93,8 @@ class AndroidFirefox(object):
         ]
 
         # start app
-        device.stop_application(self.APP_NAME)
-        device.launch_activity(
+        self.device.stop_application(self.APP_NAME)
+        self.device.launch_activity(
             self.APP_NAME,
             self.ACTIVITY_NAME,
             extra_args=app_args,
@@ -99,3 +102,10 @@ class AndroidFirefox(object):
             e10s=True,
             fail_if_running=False,
         )
+
+    def take_screenshot(self, record, path):
+        print("Getting Screenshot")
+        self.device.shell("screencap -p /sdcard/screen.png")
+        sshot_suffix = "record" if record else "replay"
+        self.device.pull("/sdcard/screen.png", "{}_{}.png".format(path, sshot_suffix))
+        self.device.rm("/sdcard/screen.png")

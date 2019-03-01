@@ -1,3 +1,5 @@
+import time
+
 import click
 import click_config_file
 
@@ -20,6 +22,9 @@ def cli(app, record, certutil, url, path):
     with MITMProxy(path, record) as proxy:
         app = APPS[app](proxy, certutil)
         app.start(url)
+
+        raw_input("Press any key to capture screenshot\n")
+        app.take_screenshot(record, path)
 
 
 if __name__ == "__main__":
