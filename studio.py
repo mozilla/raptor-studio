@@ -18,11 +18,11 @@ APPS = {"Firefox": Firefox, "GeckoViewExample": GeckoViewExample, "Chrome": Chro
 @click_config_file.configuration_option()
 def cli(app, record, certutil, url, path):
     with MITMProxy(path, record) as proxy:
-        app = APPS[app](proxy, certutil)
-        app.start(url)
-
-        raw_input("Press any key to capture screenshot\n")
-        app.take_screenshot(record, path)
+        with APPS[app](proxy, record, path, url=url, certutil=certutil) as app:
+            # hit Enter while running to take the screenshot and stop the process
+            option = raw_input("Hit Enter or CTRL+F2 while running to take the screenshot and stop the process!\n")
+            if option or not option:
+                raise KeyboardInterrupt
 
 
 if __name__ == "__main__":

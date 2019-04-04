@@ -47,6 +47,7 @@ class MITMProxy(object):
 
     def __exit__(self, *args):
         try:
-            self.process.wait()
+            if args[0] != KeyboardInterrupt:
+                self.process.wait()
         finally:
             self.process.terminate()

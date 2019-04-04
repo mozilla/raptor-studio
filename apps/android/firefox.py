@@ -1,4 +1,5 @@
 import os
+from os.path import curdir as here
 import subprocess
 
 from mozdevice import ADBAndroid
@@ -6,10 +7,18 @@ from mozprofile import create_profile
 
 
 class AndroidFirefox(object):
-    def __init__(self, proxy, certutil):
+    def __init__(self, proxy, record, path, url="about:blank", certutil=None):
         self.proxy = proxy
         self.certutil = certutil
         self.device = ADBAndroid()
+        self.url = url
+        self.record = record
+        self.path = path
+
+    def __enter__(self):
+        self.start(self.url)
+
+        return self
 
     def start(self, url="about:blank"):
         # create profile
@@ -100,9 +109,20 @@ class AndroidFirefox(object):
             fail_if_running=False,
         )
 
+    def __exit__(self, *args):
+        try:
+            self.take_screenshot(self.record, self.path)
+        finally:
+            raise KeyboardInterrupt
+
     def take_screenshot(self, record, path):
         print("Getting Screenshot")
         self.device.shell("screencap -p /sdcard/screen.png")
         sshot_suffix = "record" if record else "replay"
-        self.device.pull("/sdcard/screen.png", "{}_{}.png".format(path, sshot_suffix))
+        now = datetime.now()
+
+        # Save the screenshot "test-name_mode_timestamp" to project_dir/screen_captures
+        ss_name = "%s_%s_%s.png" % (path.replace(".mp", ""), sshot_suffix, now.strftime("%m%d_%H%M%S"))
+        path = os.path.join(here, "screen_captures", ss_name)
+        self.device.pull("/sdcard/screen.png", path)
         self.device.rm("/sdcard/screen.png")
