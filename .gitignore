@@ -1,2 +1,6 @@
 *.mp
+*.log
+*.wpr
+*.mp
 geckodriver.log
+.idea/*
