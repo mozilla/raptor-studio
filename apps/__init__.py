@@ -1,9 +1,9 @@
-from android.firefox import AndroidFirefox
+from android.firefox import GeckoViewExampleApp, FenixApp, FennecApp, RefbrowApp
 from desktop.firefox import DesktopFirefox as Firefox
 from desktop.chrome import DesktopChrome as Chrome
 
 
-class GeckoViewExample(AndroidFirefox):
-
-    APP_NAME = "org.mozilla.geckoview_example"
-    ACTIVITY_NAME = "GeckoViewActivity"
+class GeckoViewExample(GeckoViewExampleApp): pass
+class Fenix(FenixApp): pass
+class Fennec(FennecApp): pass
+class RefBrow(RefbrowApp): pass
