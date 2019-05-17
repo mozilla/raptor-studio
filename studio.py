@@ -1,10 +1,16 @@
 import click
 import click_config_file
 
-from apps import Firefox, GeckoViewExample, Chrome
+from apps import Firefox, GeckoViewExample, Fenix, Fennec, RefBrow, Chrome
 from mitmproxy import MITMProxy
 
-APPS = {"Firefox": Firefox, "GeckoViewExample": GeckoViewExample, "Chrome": Chrome}
+APPS = {
+    "Firefox": Firefox,
+    "GeckoViewExample": GeckoViewExample,
+    "Fenix": Fenix,
+    "Fennec": Fennec,
+    "Refbrow": RefBrow,
+}
 
 
 @click.command()
@@ -18,11 +24,8 @@ APPS = {"Firefox": Firefox, "GeckoViewExample": GeckoViewExample, "Chrome": Chro
 @click_config_file.configuration_option()
 def cli(app, record, certutil, url, path):
     with MITMProxy(path, record) as proxy:
-        with APPS[app](proxy, record, path, url=url, certutil=certutil) as app:
-            # hit Enter while running to take the screenshot and stop the process
-            option = raw_input("Hit Enter or CTRL+F2 while running to take the screenshot and stop the process!\n")
-            if option or not option:
-                raise KeyboardInterrupt
+        app = APPS[app](proxy, certutil)
+        app.start(url)
 
 
 if __name__ == "__main__":

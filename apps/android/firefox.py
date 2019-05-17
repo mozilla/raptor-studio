@@ -1,5 +1,4 @@
 import os
-from os.path import curdir as here
 import subprocess
 
 from mozdevice import ADBAndroid
@@ -7,26 +6,26 @@ from mozprofile import create_profile
 
 
 class AndroidFirefox(object):
-    def __init__(self, proxy, record, path, url="about:blank", certutil=None):
+    def __init__(self, proxy, certutil):
         self.proxy = proxy
         self.certutil = certutil
-        self.device = ADBAndroid()
-        self.url = url
-        self.record = record
-        self.path = path
+        self.app_args = [
+            "--marionette",
+            "--es",
+            "env0",
+            "LOG_VERBOSE=1",
+            "--es",
+            "env1",
+            "R_LOG_LEVEL=6",
+        ]
+        self.profile = None
 
-    def __enter__(self):
-        self.start(self.url)
+    def set_profile(self):
+        self.profile = create_profile("firefox")
+        print("Created profile: {}".format(self.profile.profile))
 
-        return self
-
-    def start(self, url="about:blank"):
-        # create profile
-        profile = create_profile("firefox")
-        print("Created profile: {}".format(profile.profile))
-
-        # create certificate database
-        certdb = "sql:{}/".format(profile.profile)
+    def create_certificate(self):
+        certdb = "sql:{}/".format(self.profile.profile)
         print("Creating certificate database")
         command = [self.certutil, "-N", "-v", "-d", certdb, "--empty-password"]
         subprocess.call(command)
@@ -48,11 +47,11 @@ class AndroidFirefox(object):
         print("Installing {} into certificate database".format(self.proxy.cert))
         subprocess.call(command)
 
-        # verify certificate is installed
         command = [self.certutil, "-d", certdb, "-L"]
         assert "mitmproxy-cert" in subprocess.check_output(command)
 
-        # setup device
+    def setup_device(self):
+        self.device = ADBAndroid()
         self.device.shell("pm clear {}".format(self.APP_NAME))
         self.device.create_socket_connection("reverse", "tcp:8080", "tcp:8080")
 
@@ -62,8 +61,9 @@ class AndroidFirefox(object):
             self.device.rm(device_storage, recursive=True)
         self.device.mkdir(device_storage)
         self.device.mkdir(device_profile)
+        self.app_args.extend(["-profile", device_profile])
 
-        userjs = os.path.join(profile.profile, "user.js")
+        userjs = os.path.join(self.profile.profile, "user.js")
         with open(userjs) as f:
             prefs = f.readlines()
 
@@ -72,7 +72,7 @@ class AndroidFirefox(object):
         with open(userjs, "w") as f:
             f.writelines(prefs)
 
-        profile.set_preferences(
+        self.profile.set_preferences(
             {
                 "network.proxy.type": 1,
                 "network.proxy.http": "127.0.0.1",
@@ -83,46 +83,145 @@ class AndroidFirefox(object):
             }
         )
 
-        self.device.push(profile.profile, device_profile)
+        self.device.push(self.profile.profile, device_profile)
         self.device.chmod(device_storage, recursive=True)
 
-        app_args = [
-            "-profile",
-            device_profile,
-            "--marionette",
-            "--es",
-            "env0",
-            "LOG_VERBOSE=1",
-            "--es",
-            "env1",
-            "R_LOG_LEVEL=6",
-        ]
+    def run_android_app(self, url):
+        pass
 
-        # start app
+
+class GeckoViewExampleApp(AndroidFirefox):
+    APP_NAME = "org.mozilla.geckoview_example"
+    ACTIVITY_NAME = "GeckoViewActivity"
+
+    def __init__(self, *args, **kwargs):
+        super(GeckoViewExampleApp, self).__init__(*args, **kwargs)
+
+    def run_android_app(self, url):
         self.device.stop_application(self.APP_NAME)
         self.device.launch_activity(
             self.APP_NAME,
             self.ACTIVITY_NAME,
-            extra_args=app_args,
+            extra_args=self.app_args,
             url=url,
             e10s=True,
-            fail_if_running=False,
+            fail_if_running=False
         )
 
-    def __exit__(self, *args):
-        try:
-            self.take_screenshot(self.record, self.path)
-        finally:
-            raise KeyboardInterrupt
+    def start(self, url="about:blank"):
+        # create profile
+        self.set_profile()
+        # create certificate database
+        self.create_certificate()
 
-    def take_screenshot(self, record, path):
-        print("Getting Screenshot")
-        self.device.shell("screencap -p /sdcard/screen.png")
-        sshot_suffix = "record" if record else "replay"
-        now = datetime.now()
+        # setup device
+        self.setup_device()
 
-        # Save the screenshot "test-name_mode_timestamp" to project_dir/screen_captures
-        ss_name = "%s_%s_%s.png" % (path.replace(".mp", ""), sshot_suffix, now.strftime("%m%d_%H%M%S"))
-        path = os.path.join(here, "screen_captures", ss_name)
-        self.device.pull("/sdcard/screen.png", path)
-        self.device.rm("/sdcard/screen.png")
+        # start app
+        self.run_android_app(url)
+
+
+class FenixApp(AndroidFirefox):
+    APP_NAME = "org.mozilla.fenix.raptor"
+    ACTIVITY_NAME = "org.mozilla.fenix.browser.BrowserPerformanceTestActivity"
+    DEFAULT_INTENT = "android.intent.action.VIEW"
+
+    def __init__(self, *args, **kwargs):
+        super(FenixApp, self).__init__(*args, **kwargs)
+
+    def run_android_app(self, url):
+        extras = {
+            "args": " ".join(self.app_args),
+            "use_multiprocess": True
+        }
+
+        # start app
+        self.device.stop_application(self.APP_NAME)
+        self.device.launch_application(
+            self.APP_NAME,
+            self.ACTIVITY_NAME,
+            self.DEFAULT_INTENT,
+            extras=extras,
+            url=url,
+            fail_if_running=False
+        )
+
+    def start(self, url="about:blank"):
+        # create profile
+        self.set_profile()
+        # create certificate database
+        self.create_certificate()
+
+        # setup device
+        self.setup_device()
+
+        # start app
+        self.run_android_app(url)
+
+
+class FennecApp(AndroidFirefox):
+    APP_NAME = "org.mozilla.fennec_aurora"
+    ACTIVITY_NAME = "org.mozilla.gecko.BrowserApp"
+    DEFAULT_INTENT = "android.intent.action.VIEW"
+
+    def __init__(self, *args, **kwargs):
+        super(FennecApp, self).__init__(*args, **kwargs)
+
+    def run_android_app(self, url):
+        self.device.stop_application(self.APP_NAME)
+        self.device.launch_fennec(
+            self.APP_NAME,
+            extra_args=self.app_args,
+            url=url,
+            fail_if_running=False
+        )
+
+    def start(self, url="about:blank"):
+        # create profile
+        self.set_profile()
+        # create certificate database
+        self.create_certificate()
+
+        # setup device
+        self.setup_device()
+
+        # start app
+        self.run_android_app(url)
+
+
+class RefbrowApp(AndroidFirefox):
+    APP_NAME = "org.mozilla.reference.browser"
+    ACTIVITY_NAME = "org.mozilla.reference.browser.BrowserTestActivity"
+    DEFAULT_INTENT = "android.intent.action.MAIN"
+
+    def __init__(self, *args, **kwargs):
+        super(RefbrowApp, self).__init__(*args, **kwargs)
+
+    def run_android_app(self, url):
+        extras = {
+            "args": " ".join(self.app_args),
+            "use_multiprocess": True
+        }
+
+        # start app
+        self.device.stop_application(self.APP_NAME)
+        self.device.launch_application(
+            self.APP_NAME,
+            self.ACTIVITY_NAME,
+            self.DEFAULT_INTENT,
+            extras=extras,
+            url=url,
+            fail_if_running=False
+        )
+
+    def start(self, url="about:blank"):
+        # create profile
+        self.set_profile()
+        # create certificate database
+        self.create_certificate()
+
+        # setup device
+        self.setup_device()
+
+        # start app
+        self.run_android_app(url)
