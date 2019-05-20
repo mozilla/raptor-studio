@@ -5,7 +5,7 @@ from mozdevice import ADBAndroid
 from mozprofile import create_profile
 
 
-class AndroidFirefox(object):
+class AbstractAndroidFirefox(object):
     def __init__(self, proxy, certutil):
         self.proxy = proxy
         self.certutil = certutil
@@ -87,15 +87,23 @@ class AndroidFirefox(object):
         self.device.chmod(device_storage, recursive=True)
 
     def run_android_app(self, url):
-        pass
+        raise NotImplementedError
 
 
-class GeckoViewExampleApp(AndroidFirefox):
+    def start(self, url="about:blank"):
+        # create profile
+        self.set_profile()
+        # create certificate database
+        self.create_certificate()
+        # setup device
+        self.setup_device()
+        # start app
+        self.run_android_app(url)
+
+
+class GeckoViewExample(AbstractAndroidFirefox):
     APP_NAME = "org.mozilla.geckoview_example"
     ACTIVITY_NAME = "GeckoViewActivity"
-
-    def __init__(self, *args, **kwargs):
-        super(GeckoViewExampleApp, self).__init__(*args, **kwargs)
 
     def run_android_app(self, url):
         self.device.stop_application(self.APP_NAME)
@@ -108,26 +116,11 @@ class GeckoViewExampleApp(AndroidFirefox):
             fail_if_running=False
         )
 
-    def start(self, url="about:blank"):
-        # create profile
-        self.set_profile()
-        # create certificate database
-        self.create_certificate()
 
-        # setup device
-        self.setup_device()
-
-        # start app
-        self.run_android_app(url)
-
-
-class FenixApp(AndroidFirefox):
+class Fenix(AbstractAndroidFirefox):
     APP_NAME = "org.mozilla.fenix.raptor"
     ACTIVITY_NAME = "org.mozilla.fenix.browser.BrowserPerformanceTestActivity"
-    DEFAULT_INTENT = "android.intent.action.VIEW"
-
-    def __init__(self, *args, **kwargs):
-        super(FenixApp, self).__init__(*args, **kwargs)
+    INTENT = "android.intent.action.VIEW"
 
     def run_android_app(self, url):
         extras = {
@@ -140,32 +133,17 @@ class FenixApp(AndroidFirefox):
         self.device.launch_application(
             self.APP_NAME,
             self.ACTIVITY_NAME,
-            self.DEFAULT_INTENT,
+            self.INTENT,
             extras=extras,
             url=url,
             fail_if_running=False
         )
 
-    def start(self, url="about:blank"):
-        # create profile
-        self.set_profile()
-        # create certificate database
-        self.create_certificate()
 
-        # setup device
-        self.setup_device()
-
-        # start app
-        self.run_android_app(url)
-
-
-class FennecApp(AndroidFirefox):
+class Fennec(AbstractAndroidFirefox):
     APP_NAME = "org.mozilla.fennec_aurora"
     ACTIVITY_NAME = "org.mozilla.gecko.BrowserApp"
-    DEFAULT_INTENT = "android.intent.action.VIEW"
-
-    def __init__(self, *args, **kwargs):
-        super(FennecApp, self).__init__(*args, **kwargs)
+    INTENT = "android.intent.action.VIEW"
 
     def run_android_app(self, url):
         self.device.stop_application(self.APP_NAME)
@@ -176,26 +154,11 @@ class FennecApp(AndroidFirefox):
             fail_if_running=False
         )
 
-    def start(self, url="about:blank"):
-        # create profile
-        self.set_profile()
-        # create certificate database
-        self.create_certificate()
 
-        # setup device
-        self.setup_device()
-
-        # start app
-        self.run_android_app(url)
-
-
-class RefbrowApp(AndroidFirefox):
+class RefBrow(AbstractAndroidFirefox):
     APP_NAME = "org.mozilla.reference.browser"
     ACTIVITY_NAME = "org.mozilla.reference.browser.BrowserTestActivity"
-    DEFAULT_INTENT = "android.intent.action.MAIN"
-
-    def __init__(self, *args, **kwargs):
-        super(RefbrowApp, self).__init__(*args, **kwargs)
+    INTENT = "android.intent.action.MAIN"
 
     def run_android_app(self, url):
         extras = {
@@ -208,20 +171,8 @@ class RefbrowApp(AndroidFirefox):
         self.device.launch_application(
             self.APP_NAME,
             self.ACTIVITY_NAME,
-            self.DEFAULT_INTENT,
+            self.INTENT,
             extras=extras,
             url=url,
             fail_if_running=False
         )
-
-    def start(self, url="about:blank"):
-        # create profile
-        self.set_profile()
-        # create certificate database
-        self.create_certificate()
-
-        # setup device
-        self.setup_device()
-
-        # start app
-        self.run_android_app(url)
