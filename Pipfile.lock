@@ -34,11 +34,11 @@
         },
         "click-config-file": {
             "hashes": [
-                "sha256:0c6c7598a9f7121394f2e3896ee8c6f4c9c2d3e7c19ee619652897885e1a9e3a",
-                "sha256:b467bb4a7e3227ce349bd776062466c89ea6bdab39f4e54a179b52a0cc9c2a08"
+                "sha256:1d61213ee216168e8433b9c76029f1d51694d7d9ab0f301c1ef1e4f4a65137a9",
+                "sha256:3d6918c55b24e59cc002fbf963e2c0b76a766841e560ecba04f5825e123c4694"
             ],
             "index": "pypi",
-            "version": "==0.4.3"
+            "version": "==0.5.0"
         },
         "configobj": {
             "hashes": [
@@ -48,11 +48,11 @@
         },
         "mozdevice": {
             "hashes": [
-                "sha256:71afa9545ebc7365f87e01c1f34b3227c886577da1de43711dc401f963138b59",
-                "sha256:e22e52e4ea92a50b230ac911a4179056aa1fb1d682108e8c3dc66c6d6d329163"
+                "sha256:a7b582331448f28c9f44d5a113a152537e5666b0f5ce1052dc569ab516ec99a8",
+                "sha256:ec618e0c8000663de99af076f9d5ffdf91eaa81105b75b42a2dbcdb0248c2acb"
             ],
             "index": "pypi",
-            "version": "==3.0.0"
+            "version": "==3.0.1"
         },
         "mozfile": {
             "hashes": [
@@ -63,18 +63,18 @@
         },
         "mozlog": {
             "hashes": [
-                "sha256:b9010d086e82eb15b321c45484675ee5f84f927d734926b6cfe119688d3d3b31",
-                "sha256:bcf77608ca230309b3809ca6f31b89d1d24440148f03525fd6e7b1b54065cf17"
+                "sha256:8c32f07b939960f769df891fbb30cabb86822e4d3a8d0a16ebe693d0f46eae0e",
+                "sha256:a9e84e44113ba3cfde217d4e941979d37445ee48166a79583f9fc1e74770d5e1"
             ],
-            "version": "==3.10"
+            "version": "==4.0"
         },
         "mozprofile": {
             "hashes": [
-                "sha256:49d13b578cec1c853320aff274720b69854948ecbd70aca7c9fb34f6802565c4",
-                "sha256:5564f2e190b96b037f3494ad91d4a7f1d8294243793107ab933213d05c245c1f"
+                "sha256:65cd29ab2925e40130935b144de80d23270a1bc66bf312b813942b1ba6eb7a76",
+                "sha256:94a0e14fcf357a90c42418edd414e837ff63bab876ccd51b9a7810d6f3c9fe2d"
             ],
             "index": "pypi",
-            "version": "==2.1.0"
+            "version": "==2.2.0"
         },
         "mozterm": {
             "hashes": [
@@ -100,10 +100,10 @@
         },
         "urllib3": {
             "hashes": [
-                "sha256:61bf29cada3fc2fbefad4fdf059ea4bd1b4a86d2b6d15e1c7c0b582b9752fe39",
-                "sha256:de9529817c93f27c8ccbfead6985011db27bd0ddfcdb2d86f3f663385c6a9c22"
+                "sha256:a53063d8b9210a7bdec15e7b272776b9d42b2fd6816401a0d43006ad2f9902db",
+                "sha256:d363e3607d8de0c220d31950a8f38b18d5ba7c0830facd71a1c6b1036b7ce06c"
             ],
-            "version": "==1.24.1"
+            "version": "==1.25.2"
         }
     },
     "develop": {}
