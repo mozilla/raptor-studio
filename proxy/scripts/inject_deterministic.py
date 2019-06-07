@@ -1,10 +1,7 @@
 import base64
 import hashlib
-import json
-import os
 import re
 import time
-from urllib import parse
 
 from os import path
 from mitmproxy import ctx
@@ -192,4 +189,4 @@ class AddDeterministic:
                         )
 
 
-# addons = [AddDeterministic()]
+addons = [AddDeterministic()]

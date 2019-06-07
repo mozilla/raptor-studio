@@ -91,7 +91,9 @@ class MITMProxy404(MITMProxyBase):
                 "--save-stream-file",
                 self.path,
                 "--scripts",
-                os.path.join(self.scripts, "record_scripts.py"),
+                os.path.join(self.scripts, "inject_deterministic.py"),
+                "--scripts",
+                os.path.join(self.scripts,"http_protocol_extractor.py"),
             ]
         elif self.mode is "replay":
             command = [

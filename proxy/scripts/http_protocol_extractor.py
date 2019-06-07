@@ -27,4 +27,4 @@ class HttpProtocolExtractor:
             with open(json_file_name, "w") as file:
                 file.write(json.dumps(self.request_protocol))
 
-# addons = [HttpProtocolExtractor()]
+addons = [HttpProtocolExtractor()]
