@@ -61,7 +61,9 @@ class MITMProxy202(MITMProxyBase):
                 "--wfile",
                 self.path,
                 "--script",
-                " ".join([os.path.join(self.scripts, "record_scripts.py")]),
+                os.path.join(self.scripts, "inject_deterministic.py"),
+                "--script",
+                os.path.join(self.scripts,"http_protocol_extractor.py"),
             ]
         elif self.mode is "replay":
             command = [

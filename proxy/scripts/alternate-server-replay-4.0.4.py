@@ -81,9 +81,6 @@ Http2Layer._handle_remote_settings_changed = _remote_settings_changed
 
 class AlternateServerPlayback:
     def __init__(self):
-        # import pydevd_pycharm
-        # pydevd_pycharm.settrace('localhost', port=4045, stdoutToServer=True, stderrToServer=True)
-
         ctx.master.addons.remove(ctx.master.addons.get("serverplayback"))
         self.flowmap = {}
         self.configured = False
