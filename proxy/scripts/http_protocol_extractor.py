@@ -1,3 +1,4 @@
+import datetime
 import os
 import json
 
@@ -9,6 +10,7 @@ class HttpProtocolExtractor:
 
     def __init__(self):
         self.request_protocol = {}
+
         ctx.log.info("Init Http Protocol extractor JS")
 
     def response(self, flow):
@@ -17,14 +19,17 @@ class HttpProtocolExtractor:
 
     def done(self):
         print("Add-on shutdown")
-        if not self.request_protocol is {}:
+        output_json = {}
 
-            recording_file_name = ctx.options.save_stream_file
-            json_file_name = os.path.join(os.path.dirname(recording_file_name),
-                                          "%s.json" % os.path.basename(recording_file_name).split('.')[
-                                              0])
-            print("Saving response protocol data to %s" % json_file_name)
-            with open(json_file_name, "w") as file:
-                file.write(json.dumps(self.request_protocol))
+        output_json["recording_date"] = str(datetime.datetime.now())
+        output_json["http_protocol"] = self.request_protocol
+
+        recording_file_name = ctx.options.save_stream_file
+        json_file_name = os.path.join(os.path.dirname(recording_file_name),
+                                      "%s.json" % os.path.basename(recording_file_name).split('.')[
+                                          0])
+        print("Saving response protocol data to %s" % json_file_name)
+        with open(json_file_name, "w") as file:
+            file.write(json.dumps(output_json))
 
 addons = [HttpProtocolExtractor()]

@@ -81,6 +81,9 @@ Http2Layer._handle_remote_settings_changed = _remote_settings_changed
 
 class AlternateServerPlayback:
     def __init__(self):
+        # import pydevd_pycharm
+        # pydevd_pycharm.settrace('localhost', port=4045, stdoutToServer=True, stderrToServer=True)
+
         ctx.master.addons.remove(ctx.master.addons.get("serverplayback"))
         self.flowmap = {}
         self.configured = False
@@ -121,7 +124,11 @@ class AlternateServerPlayback:
             if os.path.exists(proto):
                 ctx.log.info("Loading proto info from %s" % proto)
                 with open(proto) as f:
-                    _PROTO.update(json.loads(f.read()))
+                    recording_info = json.loads(f.read())
+                ctx.log.info("Replaying file {} recorded on {}"
+                             .format(os.path.basename(path),
+                                     recording_info["recording_date"]))
+                _PROTO.update(recording_info["http_protocol"])
 
     def _hash(self, flow):
         """
