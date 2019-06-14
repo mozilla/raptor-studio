@@ -61,7 +61,9 @@ class MITMProxy202(MITMProxyBase):
                 "--wfile",
                 self.path,
                 "--script",
-                " ".join([os.path.join(self.scripts, "inject-deterministic.py")]),
+                os.path.join(self.scripts, "inject_deterministic.py"),
+                "--script",
+                os.path.join(self.scripts, "http_protocol_extractor.py"),
             ]
         elif self.mode is "replay":
             command = [
@@ -76,7 +78,7 @@ class MITMProxy202(MITMProxyBase):
                 ),
             ]
         else:
-            raise Exception("Unknown proxy mode! Proxy mode: %s" %self.mode)
+            raise Exception("Unknown proxy mode! Proxy mode: %s" % self.mode)
         return command
 
 
@@ -91,7 +93,9 @@ class MITMProxy404(MITMProxyBase):
                 "--save-stream-file",
                 self.path,
                 "--scripts",
-                os.path.join(self.scripts, "inject-deterministic.py"),
+                os.path.join(self.scripts, "inject_deterministic.py"),
+                "--scripts",
+                os.path.join(self.scripts, "http_protocol_extractor.py"),
             ]
         elif self.mode is "replay":
             command = [
@@ -120,6 +124,6 @@ class MITMProxy404(MITMProxyBase):
                 % os.path.join(self.mitm_home, "mitmproxy-ca.pem"),
             ]
         else:
-            raise Exception("Unknown proxy mode! Proxy mode: %s" %self.mode)
+            raise Exception("Unknown proxy mode! Proxy mode: %s" % self.mode)
 
         return command

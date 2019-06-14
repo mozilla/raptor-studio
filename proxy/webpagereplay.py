@@ -69,5 +69,5 @@ class WebPageReplay(object):
         if self.mode is "record":
             command.insert(1, "record")
         elif self.mode is "replay":
-            command.insert(1,"replay", "--serve_response_in_chronological_sequence")
+            command.insert(1, "replay", "--serve_response_in_chronological_sequence")
         return command

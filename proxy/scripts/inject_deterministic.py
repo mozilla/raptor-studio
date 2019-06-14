@@ -190,3 +190,7 @@ class AddDeterministic:
 
 
 addons = [AddDeterministic()]
+
+
+def start():
+    return addons[0]
