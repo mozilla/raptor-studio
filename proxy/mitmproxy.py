@@ -92,6 +92,8 @@ class MITMProxy404(MITMProxyBase):
                 self.binary,
                 "--save-stream-file",
                 self.path,
+                "--set",
+                "websocket=false",
                 "--scripts",
                 os.path.join(self.scripts, "inject_deterministic.py"),
                 "--scripts",
@@ -103,7 +105,11 @@ class MITMProxy404(MITMProxyBase):
                 "--scripts",
                 os.path.join(self.scripts, "alternate-server-replay-4.0.4.py"),
                 "--set",
-                "server_replay={}".format(self.path),
+                "websocket=false",
+                "--set",
+                "upstream_cert=false",
+                "--set",
+                "server_replay_files={}".format(self.path),
             ]
         elif self.mode is "forward":
             command = [
