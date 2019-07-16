@@ -1,0 +1,7 @@
+certutil="/usr/bin/certutil"
+
+app="Chrome"
+proxy="mitm4"
+
+path="Recordings\google.mp"
+url="https://www.google.com"

@@ -23,7 +23,6 @@ class WebPageReplay(object):
         self.certificate_path = os.path.join(self.port_fw.mitm_home, "mitmproxy-ca.pem")
 
     def __enter__(self):
-
         self.port_fw.start()
         print("Starting WebPageReplay")
         print(" ".join(self.command()))
@@ -51,7 +50,6 @@ class WebPageReplay(object):
         return os.path.join(self.binary_path, name)
 
     def command(self):
-
         command = [
             self.binary,
             "--https_cert_file",

@@ -1,0 +1,86 @@
+[
+  {
+    "url": "https://www.amazon.com"
+  },
+  {
+    "url": "https://www.google.com",
+    "login": true
+  },
+  {
+    "url": "https://m.facebook.com",
+    "login": true
+  },
+  {
+    "url": "https://www.youtube.com"
+  },
+  {
+    "url": "https://www.instagram.com",
+    "login": true
+  },
+  {
+    "url": "https://m.ebay-kleinanzeigen.de"
+  },
+  {
+    "url": "https://www.bing.com/search?q=restaurants"
+  },
+  {
+    "label": "search",
+    "url": "https://www.google.com/search?q=restaurants+near+me",
+    "login": true
+  },
+  {
+    "url": "https://booking.com"
+  },
+  {
+    "url": "https://cnn.com"
+  },
+  {
+    "label": "ampstories",
+    "url": " https://cnn.com/ampstories/us/why-hurricane-michael-is-a-monster-unlike-any-other"
+  },
+  {
+    "label": "search",
+    "url": "https://www.amazon.com/s/ref=nb_sb_noss_2/139-6317191-5622045?url=search-alias%3Daps&field-keywords=mobile+phone"
+  },
+  {
+    "url": "https://en.m.wikipedia.org/wiki/Main_Page"
+  },
+  {
+    "label": "video",
+    "url": "https://www.youtube.com/watch?v=COU5T-Wafa4"
+  },
+  {
+    "url": "https://www.reddit.com"
+  },
+  {
+    "url": "https://stackoverflow.com/"
+  },
+  {
+    "url": "https://www.bbc.com/news/business-47245877"
+  },
+  {
+    "url": "https://support.microsoft.com/en-us"
+  },
+  {
+    "url": "https://www.jianshu.com/"
+  },
+  {
+    "url": "https://m.imdb.com/"
+  },
+  {
+    "url": "https://www.allrecipes.com/"
+  },
+  {
+    "url": "http://www.espn.com/nba/story/_/page/allstarweekend25788027/the-comparison-lebron-james-michael-jordan-their-own-words"
+  },
+  {
+    "url": "https://web.de/magazine/politik/politologe-glaubt-grossen-koalition-herbst-knallen-33563566"
+  },
+  {
+    "url": "https://aframe.io/examples/showcase/animation/"
+  },
+  {
+    "label": "cristiano",
+    "url": "https://m.facebook.com/Cristiano"
+  }
+]
