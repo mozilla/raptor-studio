@@ -1,11 +1,21 @@
 import click
 import click_config_file
 
-from apps import Firefox, GeckoViewExample, Chrome
+
+from apps.android.firefox import GeckoViewExample, Fenix, Fennec, RefBrow
+from apps.desktop.firefox import DesktopFirefox as Firefox
+from apps.desktop.chrome import DesktopChrome as Chrome
 from proxy.mitmproxy import MITMProxy202, MITMProxy404
 from proxy.webpagereplay import WebPageReplay
 
-APPS = {"Firefox": Firefox, "GeckoViewExample": GeckoViewExample, "Chrome": Chrome}
+APPS = {
+    "Firefox": Firefox,
+    "GeckoViewExample": GeckoViewExample,
+    "Fenix": Fenix,
+    "Fennec": Fennec,
+    "Refbrow": RefBrow,
+    "Chrome": Chrome
+}
 PROXYS = {"mitm2": MITMProxy202, "mitm": MITMProxy404, "wpr": WebPageReplay}
 
 
