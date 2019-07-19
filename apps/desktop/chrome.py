@@ -1,10 +1,9 @@
 from selenium.webdriver import Chrome, ChromeOptions
 
+from apps.desktop import AbstractDesktop
 
-class DesktopChrome(object):
-    def __init__(self, proxy, *args):
-        self.proxy = proxy
 
+class DesktopChrome(AbstractDesktop):
     def start(self, url="about:blank"):
         options = ChromeOptions()
         options.add_argument("--proxy-server=127.0.0.1:8080")
@@ -12,5 +11,11 @@ class DesktopChrome(object):
         options.add_argument("--ignore-certificate-errors")
         options.add_argument("--no-default-browser-check")
 
-        driver = Chrome(options=options)
-        driver.get(url)
+        self.driver = Chrome(options=options)
+        self.driver.get(url)
+
+    def app_information(self):
+        app_information = {}
+        app_information["browserName"] = self.driver.capabilities["browserName"]
+        app_information["browserVersion"] = self.driver.capabilities["browserVersion"]
+        return app_information

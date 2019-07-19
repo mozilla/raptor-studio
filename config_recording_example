@@ -1,0 +1,7 @@
+certutil="/usr/bin/certutil"
+
+app="Chrome"
+proxy="mitm4"
+
+sites="mobile-sites.json."
+path="Recordings"

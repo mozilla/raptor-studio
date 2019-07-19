@@ -16,6 +16,26 @@ $ pipenv install
 
 ```
 $ pipenv run python studio.py --help
+
+Usage: studio.py [OPTIONS] [PATH]
+
+Options:
+  --app [GeckoViewExample|Firefox|Fenix|Chrome|Refbrow|Fennec]
+                                  App type to launch.  [required]
+  --binary FILE                   Path to the app to launch. If Android app
+                                  path to APK file to install
+  --proxy [mitm2|mitm4|wpr]       Proxy Service to use.  [required]
+  --record / --replay
+  --certutil FILE                 Path to certutil. Note: Only when recording
+                                  and Only on Android
+  --sites FILE                    JSON file containing the websites
+                                  information we want ro record. Note: Only
+                                  when recording
+  --url URL                      Site to load. Note: Only when replaying.
+  --config FILE                   Read configuration from FILE.
+  --help                          Show this message and exit.
+
+
 ```
 
 

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "2b461ebbd7ddec1721e23ad287de6942ac5cb9a2ee046b8959f0e722669a1d66"
+            "sha256": "903e785e8704b2eb496a7c47629326f9519173bb770b294dacd01449a57ff25e"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -23,6 +23,19 @@
                 "sha256:caad5211e7ba5afe04367cdd4cfc68fa886e2e08f6f35e76b7387d2109ccea6e"
             ],
             "version": "==1.7"
+        },
+        "certifi": {
+            "hashes": [
+                "sha256:046832c04d4e752f37383b628bc601a7ea7211496b4638f6514d0e5b9acc4939"
+            ],
+            "version": "==2019.6.16"
+        },
+        "chardet": {
+            "hashes": [
+                "sha256:84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae",
+                "sha256:fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"
+            ],
+            "version": "==3.0.4"
         },
         "click": {
             "hashes": [
@@ -46,6 +59,13 @@
             ],
             "version": "==5.0.6"
         },
+        "idna": {
+            "hashes": [
+                "sha256:c357b3f628cf53ae2c4c05627ecc484553142ca23264e593d327bcde5e9c3407",
+                "sha256:ea8b7f6188e6fa117537c3df7da9fc686d485087abf6ac197f9c46432f7e4a3c"
+            ],
+            "version": "==2.8"
+        },
         "mozdevice": {
             "hashes": [
                 "sha256:a7b582331448f28c9f44d5a113a152537e5666b0f5ce1052dc569ab516ec99a8",
@@ -63,10 +83,10 @@
         },
         "mozlog": {
             "hashes": [
-                "sha256:8c32f07b939960f769df891fbb30cabb86822e4d3a8d0a16ebe693d0f46eae0e",
-                "sha256:a9e84e44113ba3cfde217d4e941979d37445ee48166a79583f9fc1e74770d5e1"
+                "sha256:ad433902b5865a76706750ffc7119b32286e97b971e6d325d2909d0bf0670801",
+                "sha256:dc85cfb9d47af6811f2367f471de7028c36204340c5e68a928115409ea75d9a9"
             ],
-            "version": "==4.0"
+            "version": "==4.2.0"
         },
         "mozprofile": {
             "hashes": [
@@ -83,6 +103,28 @@
             ],
             "version": "==1.0.0"
         },
+        "mozversion": {
+            "hashes": [
+                "sha256:35911badaaf02715e56c6062379688724e7afeffc2d25be8567312d24054cdd4",
+                "sha256:65f41d7dc14002f83d8f147c82ca34f7213ad07065d250939daaeeb3787dc0fa"
+            ],
+            "index": "pypi",
+            "version": "==2.1.0"
+        },
+        "requests": {
+            "hashes": [
+                "sha256:11e007a8a2aa0323f5a921e9e6a2d7e4e67d9877e85773fba9ba6419025cbeb4",
+                "sha256:9cf5292fcd0f598c671cfc1e0d7d1a7f13bb8085e9a590f48c010551dc6c4b31"
+            ],
+            "version": "==2.22.0"
+        },
+        "requests-file": {
+            "hashes": [
+                "sha256:75c175eed739270aec3c5279ffd74e6527dada275c5c0d76b5817e9c86bb7dea",
+                "sha256:8f04aa6201bacda0567e7ac7f677f1499b0fc76b22140c54bc06edf1ba92e2fa"
+            ],
+            "version": "==1.4.3"
+        },
         "selenium": {
             "hashes": [
                 "sha256:2d7131d7bc5a5b99a2d9b04aaf2612c411b03b8ca1b1ee8d3de5845a9be2cb3c",
@@ -98,12 +140,20 @@
             ],
             "version": "==1.12.0"
         },
+        "tldextract": {
+            "hashes": [
+                "sha256:2c1c5d9d454f79734b4f3da0d603856dd9f820753410a3e9abf0a0c9fde33e97",
+                "sha256:b72bef6013de67c7fa181250bc2c2e089a994d259c09ca95a9771f2f97e29ed1"
+            ],
+            "index": "pypi",
+            "version": "==2.2.1"
+        },
         "urllib3": {
             "hashes": [
-                "sha256:a53063d8b9210a7bdec15e7b272776b9d42b2fd6816401a0d43006ad2f9902db",
-                "sha256:d363e3607d8de0c220d31950a8f38b18d5ba7c0830facd71a1c6b1036b7ce06c"
+                "sha256:b246607a25ac80bedac05c6f282e3cdaf3afb65420fd024ac94435cabe6e18d1",
+                "sha256:dbe59173209418ae49d485b87d1681aefa36252ee85884c31346debd19463232"
             ],
-            "version": "==1.25.2"
+            "version": "==1.25.3"
         }
     },
     "develop": {}

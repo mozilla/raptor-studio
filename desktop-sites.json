@@ -1,0 +1,119 @@
+[
+  {
+    "label": "search",
+    "url": "https://www.google.com/search?hl=en&q=barack+obama&cad=h",
+    "login": true
+  },
+  {
+    "url": "https://www.youtube.com"
+  },
+  {
+    "url": "https://www.facebook.com",
+    "login": true
+  },
+  {
+    "url": "https://www.amazon.com/s?k=laptop&ref=nb_sb_noss_1"
+  },
+  {
+    "url": "https://www.paypal.com/myaccount/summary/",
+    "login": true
+  },
+  {
+    "url": "https://www.tumblr.com/dashboard",
+    "login": true
+  },
+  {
+    "label": "docs",
+    "url": "https://docs.google.com/document/d/1US-07msg12slQtI_xchzYxcKlTs6Fp7WqIc6W5GK5M8/edit?usp=sharing"
+  },
+  {
+    "label": "slides",
+    "url": "https://docs.google.com/presentation/d/1Ici0ceWwpFvmIb3EmKeWSq_vAQdmmdFcWqaiLqUkJng/edit?usp=sharing"
+  },
+  {
+    "label": "sheets",
+    "url": "https://docs.google.com/spreadsheets/d/1jT9qfZFAeqNoOK97gruc34Zb7y_Q-O_drZ8kSXT-4D4/edit?usp=sharing"
+  },
+  {
+    "url": "https://www.fandom.com/articles/fallout-76-will-live-and-die-on-the-creativity-of-its-playerbase"
+  },
+  {
+    "url": "https://imgur.com/gallery/m5tYJL6"
+  },
+  {
+    "url": "https://www.imdb.com/title/tt0084967/?ref_=nv_sr_2"
+  },
+  {
+    "url": "https://yandex.ru/search/?text=barack%20obama&lr=10115"
+  },
+  {
+    "url": "https://www.bing.com/search?q=barack+obama"
+  },
+  {
+    "url": "https://www.apple.com/macbook-pro/"
+  },
+  {
+    "url": "https://www.microsoft.com/en-us/"
+  },
+  {
+    "url": "https://www.reddit.com/r/technology/comments/9sqwyh/we_posed_as_100_senators_to_run_ads_on_facebook/"
+  },
+  {
+    "url": "https://www.yahoo.com/lifestyle/police-respond-noise-complaint-end-playing-video-games-respectful-tenants-002329963.html"
+  },
+  {
+    "url": "https://www.netflix.com/title/80117263",
+    "login": true
+  },
+  {
+    "label": "mail",
+    "url": "https://mail.yahoo.com/",
+    "login": true
+  },
+  {
+    "url": "https://twitter.com/BarackObama"
+  },
+  {
+    "url": "https://www.instagram.com/",
+    "login": true
+  },
+  {
+    "url": "https://www.linkedin.com/in/thommy-harris-hk-385723106/",
+    "login": true
+  },
+  {
+    "url": "https://www.ebay.com/"
+  },
+  {
+    "url": "https://en.wikipedia.org/wiki/Barack_Obama"
+  },
+  {
+    "label": "mail",
+    "url": "https://mail.google.com/",
+    "login": true
+  },
+  {
+    "url": "https://outlook.live.com/mail/inbox",
+    "login": true
+  },
+  {
+    "url": "https://office.live.com/start/Word.aspx?omkt=en-US&auth=1&nf=1",
+    "login": true
+  },
+  {
+    "url": "https://pinterest.com/",
+    "login": true
+  },
+  {
+    "label": "binast",
+    "url": "https://www.instagram.com/",
+    "login": true
+  },
+  {
+    "url": "https://www.twitch.tv/videos/326804629"
+  },
+  {
+    "url": "https://www.blogger.com/u/1/blogger.g?blogID={testblogID}",
+    "login": true
+  }
+]

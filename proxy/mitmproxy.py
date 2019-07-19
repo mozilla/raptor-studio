@@ -2,6 +2,7 @@ import os
 import signal
 import subprocess
 import sys
+import time
 
 dirname = os.path.dirname(__file__)
 
@@ -37,17 +38,27 @@ class MITMProxyBase(object):
         return self.process
 
     def stop(self):
-        self.process.send_signal(signal.SIGINT)
+        if self.mode is "record":
+            # Record mode. Send proxy stop command and wait for it to close.
+            # If is's not closed kill the process
+            self.process.send_signal(signal.SIGINT)
+            time.sleep(10)
+
+            if self.process.poll() is None:
+                self.process.kill()
+        else:
+            # Replay mode. Wait for the process to be killed and then make sure the proxy is closed
+            try:
+                self.process.wait()
+            finally:
+                self.process.send_signal(signal.SIGINT)
 
     def __enter__(self):
         self.start()
         return self
 
     def __exit__(self, *args):
-        try:
-            self.process.wait()
-        finally:
-            self.stop()
+        self.stop()
 
 
 class MITMProxy202(MITMProxyBase):
