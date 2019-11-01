@@ -1,8 +1,5 @@
 [
   {
-    "url": "https://www.amazon.com"
-  },
-  {
     "url": "https://www.google.com",
     "login": true
   },
@@ -11,22 +8,37 @@
     "login": true
   },
   {
-    "url": "https://www.youtube.com"
-  },
-  {
     "url": "https://www.instagram.com",
     "login": true
-  },
-  {
-    "url": "https://m.ebay-kleinanzeigen.de"
-  },
-  {
-    "url": "https://www.bing.com/search?q=restaurants"
   },
   {
     "label": "search",
     "url": "https://www.google.com/search?q=restaurants+near+me",
     "login": true
+  },
+  {
+    "url": "https://www.amazon.com"
+  },
+  {
+    "url": "https://www.youtube.com"
+  },
+  {
+    "url": "https://m.ebay-kleinanzeigen.de"
+  },
+  {
+    "url": "https://m.ebay-kleinanzeigen.de/s-anzeigen/auf-zeit-wg-berlin/zimmer/c199-l3331",
+    "label": "search"
+  },
+  {
+    "label": "search",
+    "url": "https://www.bing.com/search?q=restaurants"
+  },
+  {
+    "url": "https://www.bing.com/"
+  },
+  {
+    "label": "maps",
+    "url": "https://www.google.com/maps?force=pwa"
   },
   {
     "url": "https://booking.com"
@@ -36,7 +48,7 @@
   },
   {
     "label": "ampstories",
-    "url": " https://cnn.com/ampstories/us/why-hurricane-michael-is-a-monster-unlike-any-other"
+    "url": "https://cnn.com/ampstories/us/why-hurricane-michael-is-a-monster-unlike-any-other"
   },
   {
     "label": "search",
@@ -59,7 +71,8 @@
     "url": "https://www.bbc.com/news/business-47245877"
   },
   {
-    "url": "https://support.microsoft.com/en-us"
+    "url": "https://support.microsoft.com/en-us",
+    "label": "support"
   },
   {
     "url": "https://www.jianshu.com/"

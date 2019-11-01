@@ -33,7 +33,7 @@ APPS = {
 
 PROXYS = {"mitm2": MITMProxy202, "mitm4": MITMProxy404, "wpr": WebPageReplay}
 
-RECORD_TIMEOUT = 30
+RECORD_TIMEOUT = 60
 
 
 class Mode:
@@ -121,7 +121,7 @@ class Mode:
 
             platform_name = platform.system().lower()
 
-            if isinstance(self.app, AbstractAndroidFirefox):
+            if issubclass(APPS[self.app], AbstractAndroidFirefox):
                 device = ADBAndroid()
 
                 for property in ["ro.product.model", "ro.build.user", "ro.build.version.release"]:
@@ -129,11 +129,14 @@ class Mode:
 
                 platform_name = "".join(
                     e for e in self.information["ro.product.model"] if e.isalnum()
-                )
+                ).lower()
 
             for site in sites_json:
                 site["domain"] = tldextract.extract(site["url"]).domain
-                name = [self.proxy, platform_name, self.app.lower(), site["domain"]]
+                name = [self.proxy,
+                        platform_name,
+                        "gve" if self.app == "GeckoViewExample" else self.app.lower(),
+                        site["domain"]]
                 label = site.get("label")
                 if label:
                     name.append(label)
@@ -193,7 +196,8 @@ class Mode:
             manifest["digest"] = self._digest_file(site["zip_path"], "sha512")
             manifest["algorithm"] = "sha512"
             manifest["filename"] = os.path.basename(site["zip_path"])
-            f.write(json.dumps(manifest))
+            manifest["unpack"] = True
+            f.write(json.dumps([manifest]))
 
 
 @click.command()
