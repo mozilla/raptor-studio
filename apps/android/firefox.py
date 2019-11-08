@@ -7,8 +7,8 @@ from mozversion import mozversion
 
 
 class AbstractAndroidFirefox(object):
-    def __init__(self, proxy, certutil, binary):
-        self.proxy = proxy
+    def __init__(self, certutil, binary):
+        self.proxy = None
         self.certutil = certutil
         self.app_args = [
             "--marionette",
@@ -20,6 +20,7 @@ class AbstractAndroidFirefox(object):
             "R_LOG_LEVEL=6",
         ]
         self.binary = binary
+        self.app_installed = False
         self.profile = None
 
     def set_profile(self):
@@ -55,10 +56,17 @@ class AbstractAndroidFirefox(object):
     def setup_device(self):
         self.device = ADBAndroid()
         if self.binary:
-            if self.device.is_app_installed(self.APP_NAME):
-                print("Uninstalling app %s" % self.APP_NAME)
-                self.device.uninstall_app(self.APP_NAME)
-            self.device.install_app(apk_path=self.binary)
+            if not self.app_installed:
+                if self.device.is_app_installed(self.APP_NAME):
+                    print("Uninstalling app %s" % self.APP_NAME)
+                    self.device.uninstall_app(self.APP_NAME)
+                print("Installing app %s" % self.APP_NAME)
+                self.device.install_app(apk_path=self.binary)
+                self.app_installed = True
+            else:
+                print("App already installed in a previous recording!!!!")
+        else:
+            print("No binary provided! Using existing app on the device.")
 
     def setup_app(self):
         self.device.shell("pm clear {}".format(self.APP_NAME))
@@ -99,7 +107,8 @@ class AbstractAndroidFirefox(object):
     def run_android_app(self, url):
         raise NotImplementedError
 
-    def start(self, url="about:blank"):
+    def start(self, url="about:blank", proxy_service=None):
+        self.proxy = proxy_service
         self.setup_device()
         self.set_profile()
         self.create_certificate()

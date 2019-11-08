@@ -72,6 +72,8 @@ class Mode:
             print("Creating recording path: %s" % self.path)
             os.mkdir(self.path)
 
+        app_service = APPS[self.app](self.certutil, self.binary)
+
         for site in self.parse_sites_json():
             if not os.path.exists(os.path.dirname(site["recording_path"])):
                 print(
@@ -83,9 +85,8 @@ class Mode:
             with PROXYS[self.proxy](
                 path=site["recording_path"], mode="record"
             ) as proxy_service:
-                app_service = APPS[self.app](proxy_service, self.certutil, self.binary)
                 print("Recording %s..." %site["url"])
-                app_service.start(site["url"])
+                app_service.start(site["url"], proxy_service)
 
                 if not site.get("login", None):
                     print("Waiting %s for the site to load..." % RECORD_TIMEOUT)

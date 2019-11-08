@@ -5,7 +5,8 @@ from apps.desktop import AbstractDesktop
 
 
 class DesktopFirefox(AbstractDesktop):
-    def start(self, url="about:blank"):
+    def start(self, url="about:blank", proxy_service=None):
+        self.proxy = proxy_service
         options = FirefoxOptions()
         options.set_preference("network.proxy.type", 1)
         options.set_preference("network.proxy.http", "127.0.0.1")

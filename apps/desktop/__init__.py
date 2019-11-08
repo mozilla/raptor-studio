@@ -1,6 +1,6 @@
 class AbstractDesktop(object):
-    def __init__(self, proxy, certutil, binary=None):
-        self.proxy = proxy
+    def __init__(self,  certutil, binary=None):
+        self.proxy = None
         self.binary = binary
         self.certutil = certutil
         self.driver = None
