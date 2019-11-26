@@ -189,6 +189,15 @@ class Mode:
         with open(site["json_path"], "r") as f:
             json_data = json.loads(f.read())
 
+        # Generate the eTLD+1 list
+        # Bug 1585598 - Validate list of sites used for testing Fission
+        etdl = []
+        for item in json_data['http_protocol'].keys():
+            base_url = ".".join(item.split('.')[-2:])
+            if base_url not in etdl:
+                etdl.append(base_url)
+        self.information["etdl"] = etdl
+
         self.information["proxy"] = self.proxy
 
         self.information["url"] = site["url"]
