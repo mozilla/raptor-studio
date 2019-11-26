@@ -61,6 +61,19 @@ class Mode:
             print("hashed %s with %s to be %s" % (name, algorithm, h.hexdigest()))
             return h.hexdigest()
 
+    def replay_site(self, site, screen_shot=False):
+        with PROXYS[self.proxy](
+            path=site["recording_path"], mode="replay"
+        ) as proxy_service:
+            app_service = APPS[self.app](self.certutil, self.binary)
+            app_service.start(site["url"], proxy_service)
+
+            if screen_shot:
+                time.sleep(5)
+                app_service.screen_shot(site["screen_shot_path"])
+
+            app_service.stop()
+
     def replaying(self):
         with PROXYS[self.proxy](path=self.path, mode="replay") as proxy_service:
             app_service = APPS[self.app](proxy_service, self.certutil)
@@ -85,7 +98,7 @@ class Mode:
             with PROXYS[self.proxy](
                 path=site["recording_path"], mode="record"
             ) as proxy_service:
-                print("Recording %s..." %site["url"])
+                print("Recording %s..." % site["url"])
                 app_service.start(site["url"], proxy_service)
 
                 if not site.get("login", None):
@@ -95,11 +108,12 @@ class Mode:
                     time.sleep(5)
                     raw_input("Do user input and press <Return>")
 
-                app_service.screen_shot(site["screen_shot_path"])
                 self.information["app_info"] = app_service.app_information()
                 app_service.stop()
 
             self.update_json_information(site)
+            self.replay_site(site, screen_shot=True)
+
             self.generate_zip_file(site)
             self.generate_manifest_file(site)
 
@@ -125,8 +139,14 @@ class Mode:
             if issubclass(APPS[self.app], AbstractAndroidFirefox):
                 device = ADBAndroid()
 
-                for property in ["ro.product.model", "ro.build.user", "ro.build.version.release"]:
-                    self.information[property] = device.shell_output("getprop {}".format(property))
+                for property in [
+                    "ro.product.model",
+                    "ro.build.user",
+                    "ro.build.version.release",
+                ]:
+                    self.information[property] = device.shell_output(
+                        "getprop {}".format(property)
+                    )
 
                 platform_name = "".join(
                     e for e in self.information["ro.product.model"] if e.isalnum()
@@ -134,10 +154,12 @@ class Mode:
 
             for site in sites_json:
                 site["domain"] = tldextract.extract(site["url"]).domain
-                name = [self.proxy,
-                        platform_name,
-                        "gve" if self.app == "GeckoViewExample" else self.app.lower(),
-                        site["domain"]]
+                name = [
+                    self.proxy,
+                    platform_name,
+                    "gve" if self.app == "GeckoViewExample" else self.app.lower(),
+                    site["domain"],
+                ]
                 label = site.get("label")
                 if label:
                     name.append(label)
@@ -176,7 +198,7 @@ class Mode:
 
         json_data["info"] = self.information
         with open(site["json_path"], "w") as f:
-            f.write(json.dumps(json_data))
+            f.write(json.dumps(json_data, sort_keys=True, indent=2))
 
     def generate_zip_file(self, site):
         print("Generating zip file")
@@ -198,7 +220,7 @@ class Mode:
             manifest["algorithm"] = "sha512"
             manifest["filename"] = os.path.basename(site["zip_path"])
             manifest["unpack"] = True
-            f.write(json.dumps([manifest]))
+            f.write(json.dumps([manifest], sort_keys=True, indent=2))
 
 
 @click.command()

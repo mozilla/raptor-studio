@@ -37,8 +37,8 @@ class MITMProxyBase(object):
 
         return self.process
 
-    def stop(self):
-        if self.mode is "record":
+    def stop(self, kill=True):
+        if kill:
             # Record mode. Send proxy stop command and wait for it to close.
             # If is's not closed kill the process
             self.process.send_signal(signal.SIGINT)

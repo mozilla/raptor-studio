@@ -55,7 +55,7 @@ class AbstractAndroidFirefox(object):
 
     def setup_device(self):
         self.device = ADBAndroid()
-        if self.binary:
+        if self.binary and self.proxy.mode is "record":
             if not self.app_installed:
                 if self.device.is_app_installed(self.APP_NAME):
                     print("Uninstalling app %s" % self.APP_NAME)
@@ -66,7 +66,9 @@ class AbstractAndroidFirefox(object):
             else:
                 print("App already installed in a previous recording!!!!")
         else:
-            print("No binary provided! Using existing app on the device.")
+            print(
+                "No binary provided or proxy in replay mode! Using existing app on the device."
+            )
 
     def setup_app(self):
         self.device.shell("pm clear {}".format(self.APP_NAME))
@@ -103,7 +105,6 @@ class AbstractAndroidFirefox(object):
         self.device.push(self.profile.profile, device_profile)
         self.device.chmod(device_storage, recursive=True)
 
-
     def run_android_app(self, url):
         raise NotImplementedError
 
@@ -114,7 +115,6 @@ class AbstractAndroidFirefox(object):
         self.create_certificate()
         self.setup_app()
         self.run_android_app(url)
-
 
     def stop(self):
         self.device.stop_application(self.APP_NAME)
