@@ -6,6 +6,11 @@
 A simple command-line tool for recording and replaying web traffic for Raptor.
 
 
+## Prerequisite
+
+You should have installed and configured the latest [geckodriver](https://github.com/mozilla/geckodriver/releases) binary.
+
+
 ## Installation
 
 ```
