@@ -3,7 +3,7 @@
 
 # Raptor Studio
 
-A simple command line tool for recording and replaying web traffic for Raptor.
+A simple command-line tool for recording and replaying web traffic for Raptor.
 
 
 ## Installation
@@ -22,16 +22,16 @@ Usage: studio.py [OPTIONS] [PATH]
 Options:
   --app [GeckoViewExample|Firefox|Fenix|Chrome|Refbrow|Fennec]
                                   App type to launch.  [required]
-  --binary FILE                   Path to the app to launch. If Android app
-                                  path to APK file to install
-  --proxy [mitm2|mitm4|wpr]       Proxy Service to use.  [required]
+  --binary FILE                   Path to the app to launch. If Android, app
+                                  path to APK file to install.
+  --proxy [mitm2|mitm4|wpr]       Proxy service to use.  [required]
   --record / --replay
-  --certutil FILE                 Path to certutil. Note: Only when recording
-                                  and Only on Android
+  --certutil FILE                 Path to certutil. Note: only when recording
+                                  and only on Android.
   --sites FILE                    JSON file containing the websites
-                                  information we want ro record. Note: Only
-                                  when recording
-  --url URL                      Site to load. Note: Only when replaying.
+                                  information we want to record. Note: only
+                                  when recording.
+  --url URL                       Site to load. Note: Only when replaying.
   --config FILE                   Read configuration from FILE.
   --help                          Show this message and exit.
 
@@ -40,7 +40,7 @@ Options:
 
 
 ## Config file
-Create config file ex. *config.cfg*
+Create config file; e.g. *config.cfg*
 
 ```
 certutil=""
@@ -52,12 +52,11 @@ Run using:
 ```
 $ pipenv run python studio.py --config config.cfg --replay
 ```
-Note:
+Notes:
 
-Config file settings will override the default settings
-
-Command line setting will override the config file settings
+* Config file settings will override the default settings
+* Command-line setting will override the config file settings
 
 # Resources
 
-- [Code](http://github.com/davehunt/raptor-studio)
+- [Code](http://github.com/mozilla/raptor-studio)
