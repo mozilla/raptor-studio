@@ -20,7 +20,7 @@ class AbstractAndroidFirefox(object):
             "R_LOG_LEVEL=6",
         ]
         self.binary = binary
-        self.app_installed = False
+        self.skip_install = False
         self.profile = None
 
     def set_profile(self):
@@ -56,13 +56,13 @@ class AbstractAndroidFirefox(object):
     def setup_device(self):
         self.device = ADBAndroid()
         if self.binary and self.proxy.mode is "record":
-            if not self.app_installed:
+            if not self.skip_install:
                 if self.device.is_app_installed(self.APP_NAME):
                     print("Uninstalling app %s" % self.APP_NAME)
                     self.device.uninstall_app(self.APP_NAME)
                 print("Installing app %s" % self.APP_NAME)
                 self.device.install_app(apk_path=self.binary)
-                self.app_installed = True
+                self.skip_install = True
             else:
                 print("App already installed in a previous recording!!!!")
         else:

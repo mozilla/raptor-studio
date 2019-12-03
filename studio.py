@@ -61,7 +61,15 @@ class Mode:
             print("hashed %s with %s to be %s" % (name, algorithm, h.hexdigest()))
             return h.hexdigest()
 
-    def replay_site(self, site, screen_shot=False):
+    def replaying(self, site=None, screen_shot=False):
+
+        if site is None:
+            site = {
+                "recording_path": self.path,
+                "url": self.url,
+                "screen_shot_path": "%s.png" % self.path,
+            }
+
         with PROXYS[self.proxy](
             path=site["recording_path"], mode="replay"
         ) as proxy_service:
@@ -73,11 +81,6 @@ class Mode:
                 app_service.screen_shot(site["screen_shot_path"])
 
             app_service.stop()
-
-    def replaying(self):
-        with PROXYS[self.proxy](path=self.path, mode="replay") as proxy_service:
-            app_service = APPS[self.app](proxy_service, self.certutil)
-            app_service.start(self.url)
 
     def recording(self):
         print("Starting record mode!!!")
@@ -112,7 +115,7 @@ class Mode:
                 app_service.stop()
 
             self.update_json_information(site)
-            self.replay_site(site, screen_shot=True)
+            self.replaying(site, screen_shot=True)
 
             self.generate_zip_file(site)
             self.generate_manifest_file(site)
@@ -192,8 +195,8 @@ class Mode:
         # Generate the eTLD+1 list
         # Bug 1585598 - Validate list of sites used for testing Fission
         etdl = []
-        for item in json_data['http_protocol'].keys():
-            base_url = ".".join(item.split('.')[-2:])
+        for item in json_data["http_protocol"].keys():
+            base_url = ".".join(item.split(".")[-2:])
             if base_url not in etdl:
                 etdl.append(base_url)
         self.information["etdl"] = etdl

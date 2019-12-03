@@ -12,6 +12,7 @@ class MITMProxyBase(object):
         self.path = path
         self.mode = mode
         self.version = version
+        self.process = None
         self.mitm_home = os.path.join(os.path.expanduser("~"), ".mitmproxy")
         self.cert = os.path.join(self.mitm_home, "mitmproxy-ca-cert.cer")
         self.scripts = os.path.join(dirname, "scripts")
@@ -37,21 +38,14 @@ class MITMProxyBase(object):
 
         return self.process
 
-    def stop(self, kill=True):
-        if kill:
-            # Record mode. Send proxy stop command and wait for it to close.
-            # If is's not closed kill the process
-            self.process.send_signal(signal.SIGINT)
-            time.sleep(10)
+    def stop(self):
+        # Send proxy stop command and wait for it to close.
+        # If is's not closed kill the process
+        self.process.send_signal(signal.SIGINT)
+        time.sleep(10)
 
-            if self.process.poll() is None:
-                self.process.kill()
-        else:
-            # Replay mode. Wait for the process to be killed and then make sure the proxy is closed
-            try:
-                self.process.wait()
-            finally:
-                self.process.send_signal(signal.SIGINT)
+        if self.process.poll() is None:
+            self.process.kill()
 
     def __enter__(self):
         self.start()
