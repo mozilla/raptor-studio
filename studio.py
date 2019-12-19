@@ -61,16 +61,34 @@ class Mode:
             print("hashed %s with %s to be %s" % (name, algorithm, h.hexdigest()))
             return h.hexdigest()
 
-    def replaying(self):
-        with PROXYS[self.proxy](path=self.path, mode="replay") as proxy_service:
-            app_service = APPS[self.app](proxy_service, self.certutil)
-            app_service.start(self.url)
+    def replaying(self, site=None, screen_shot=False):
+
+        if site is None:
+            site = {
+                "recording_path": self.path,
+                "url": self.url,
+                "screen_shot_path": "%s.png" % self.path,
+            }
+
+        with PROXYS[self.proxy](
+            path=site["recording_path"], mode="replay"
+        ) as proxy_service:
+            app_service = APPS[self.app](self.certutil, self.binary)
+            app_service.start(site["url"], proxy_service)
+
+            if screen_shot:
+                time.sleep(5)
+                app_service.screen_shot(site["screen_shot_path"])
+
+            app_service.stop()
 
     def recording(self):
         print("Starting record mode!!!")
         if not os.path.exists(self.path):
             print("Creating recording path: %s" % self.path)
             os.mkdir(self.path)
+
+        app_service = APPS[self.app](self.certutil, self.binary)
 
         for site in self.parse_sites_json():
             if not os.path.exists(os.path.dirname(site["recording_path"])):
@@ -83,9 +101,8 @@ class Mode:
             with PROXYS[self.proxy](
                 path=site["recording_path"], mode="record"
             ) as proxy_service:
-                app_service = APPS[self.app](proxy_service, self.certutil, self.binary)
-                print("Recording %s..." %site["url"])
-                app_service.start(site["url"])
+                print("Recording %s..." % site["url"])
+                app_service.start(site["url"], proxy_service)
 
                 if not site.get("login", None):
                     print("Waiting %s for the site to load..." % RECORD_TIMEOUT)
@@ -94,11 +111,12 @@ class Mode:
                     time.sleep(5)
                     raw_input("Do user input and press <Return>")
 
-                app_service.screen_shot(site["screen_shot_path"])
                 self.information["app_info"] = app_service.app_information()
                 app_service.stop()
 
             self.update_json_information(site)
+            self.replaying(site, screen_shot=True)
+
             self.generate_zip_file(site)
             self.generate_manifest_file(site)
 
@@ -124,8 +142,14 @@ class Mode:
             if issubclass(APPS[self.app], AbstractAndroidFirefox):
                 device = ADBAndroid()
 
-                for property in ["ro.product.model", "ro.build.user", "ro.build.version.release"]:
-                    self.information[property] = device.shell_output("getprop {}".format(property))
+                for property in [
+                    "ro.product.model",
+                    "ro.build.user",
+                    "ro.build.version.release",
+                ]:
+                    self.information[property] = device.shell_output(
+                        "getprop {}".format(property)
+                    )
 
                 platform_name = "".join(
                     e for e in self.information["ro.product.model"] if e.isalnum()
@@ -133,10 +157,12 @@ class Mode:
 
             for site in sites_json:
                 site["domain"] = tldextract.extract(site["url"]).domain
-                name = [self.proxy,
-                        platform_name,
-                        "gve" if self.app == "GeckoViewExample" else self.app.lower(),
-                        site["domain"]]
+                name = [
+                    self.proxy,
+                    platform_name,
+                    "gve" if self.app == "GeckoViewExample" else self.app.lower(),
+                    site["domain"],
+                ]
                 label = site.get("label")
                 if label:
                     name.append(label)
@@ -166,6 +192,15 @@ class Mode:
         with open(site["json_path"], "r") as f:
             json_data = json.loads(f.read())
 
+        # Generate the eTLD+1 list
+        # Bug 1585598 - Validate list of sites used for testing Fission
+        etdl = []
+        for item in json_data["http_protocol"].keys():
+            base_url = ".".join(item.split(".")[-2:])
+            if base_url not in etdl:
+                etdl.append(base_url)
+        self.information["etdl"] = etdl
+
         self.information["proxy"] = self.proxy
 
         self.information["url"] = site["url"]
@@ -175,7 +210,7 @@ class Mode:
 
         json_data["info"] = self.information
         with open(site["json_path"], "w") as f:
-            f.write(json.dumps(json_data))
+            f.write(json.dumps(json_data, sort_keys=True, indent=2))
 
     def generate_zip_file(self, site):
         print("Generating zip file")
@@ -197,7 +232,7 @@ class Mode:
             manifest["algorithm"] = "sha512"
             manifest["filename"] = os.path.basename(site["zip_path"])
             manifest["unpack"] = True
-            f.write(json.dumps([manifest]))
+            f.write(json.dumps([manifest], sort_keys=True, indent=2))
 
 
 @click.command()

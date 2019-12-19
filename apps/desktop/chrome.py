@@ -4,7 +4,8 @@ from apps.desktop import AbstractDesktop
 
 
 class DesktopChrome(AbstractDesktop):
-    def start(self, url="about:blank"):
+    def start(self, url="about:blank", proxy_service=None):
+        self.proxy = proxy_service
         options = ChromeOptions()
         options.add_argument("--proxy-server=127.0.0.1:8080")
         options.add_argument("--proxy-bypass-list=localhost;127.0.0.1")
