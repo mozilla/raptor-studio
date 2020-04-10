@@ -71,7 +71,7 @@ class Mode:
             }
 
         with PROXYS[self.proxy](
-            path=site["recording_path"], mode="replay"
+                path=site["recording_path"], mode="replay"
         ) as proxy_service:
             app_service = APPS[self.app](self.certutil, self.binary)
             app_service.start(site["url"], proxy_service)
@@ -93,13 +93,13 @@ class Mode:
         for site in self.parse_sites_json():
             if not os.path.exists(os.path.dirname(site["recording_path"])):
                 print(
-                    "Creating recording path: %s"
-                    % os.path.dirname(site["recording_path"])
+                        "Creating recording path: %s"
+                        % os.path.dirname(site["recording_path"])
                 )
                 os.mkdir(os.path.dirname(site["recording_path"]))
 
             with PROXYS[self.proxy](
-                path=site["recording_path"], mode="record"
+                    path=site["recording_path"], mode="record"
             ) as proxy_service:
                 print("Recording %s..." % site["url"])
                 app_service.start(site["url"], proxy_service)
@@ -172,6 +172,9 @@ class Mode:
                 site["name"] = name
 
                 site["recording_path"] = "%s.mp" % site["path"]
+                if "mitm" in self.proxy:
+                    site["mitm_netlocs"] = os.path.join(self.path, name,
+                                                        "mitm_netlocs_%s.json" % name)
                 site["json_path"] = "%s.json" % site["path"]
                 site["screen_shot_path"] = "%s.png" % site["path"]
                 site["zip_path"] = os.path.join(self.path, "%s.zip" % site["name"])
@@ -217,6 +220,8 @@ class Mode:
 
         with ZipFile(site["zip_path"], "w") as zf:
             zf.write(site["recording_path"], os.path.basename(site["recording_path"]))
+            if "mitm" in self.proxy:
+                zf.write(site["mitm_netlocs"], os.path.basename(site["mitm_netlocs"]))
             zf.write(site["json_path"], os.path.basename(site["json_path"]))
             zf.write(
                 site["screen_shot_path"], os.path.basename(site["screen_shot_path"])
