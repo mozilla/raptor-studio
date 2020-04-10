@@ -37,14 +37,13 @@ RECORD_TIMEOUT = 60
 
 
 class Mode:
-    def __init__(self, app, binary, proxy, certutil, path, sites, url):
+    def __init__(self, app, binary, proxy, certutil, path, sites):
         self.app = app
         self.binary = binary
         self.proxy = proxy
         self.certutil = certutil
         self.path = path
         self.sites_path = sites
-        self.url = url
         self.information = {}
 
     def _digest_file(self, file, algorithm):
@@ -61,21 +60,26 @@ class Mode:
             print("hashed %s with %s to be %s" % (name, algorithm, h.hexdigest()))
             return h.hexdigest()
 
-    def replaying(self, site=None, screen_shot=False):
+    def replaying_sites(self):
+        if self.sites_path:
+            app_service = APPS[self.app](self.certutil, self.binary)
 
-        if site is None:
-            site = {
-                "recording_path": self.path,
-                "url": self.url,
-                "screen_shot_path": "%s.png" % self.path,
-            }
+            for site in self.parse_sites_json():
+                with PROXYS[self.proxy](
+                        path=site["recording_path"], mode="replay"
+                ) as proxy_service:
+                    print("Replaing %s..." % site["url"])
+                    app_service.start(site["url"], proxy_service)
 
+                    time.sleep(5)
+                    raw_input("Press <Return> to stop the browser")
+
+    def replaying(self, site, screen_shot=False):
         with PROXYS[self.proxy](
                 path=site["recording_path"], mode="replay"
         ) as proxy_service:
             app_service = APPS[self.app](self.certutil, self.binary)
             app_service.start(site["url"], proxy_service)
-
             if screen_shot:
                 time.sleep(5)
                 app_service.screen_shot(site["screen_shot_path"])
@@ -264,16 +268,13 @@ class Mode:
     help="JSON file containing the websites information we want ro record. Note: Only when recording",
 )
 @click.argument("path", default="Recordings")
-@click.option(
-    "--url", default="about:blank", help="Site to load. Note: Only when replaying."
-)
 @click_config_file.configuration_option()
-def cli(app, binary, proxy, record, certutil, sites, path, url):
-    mode = Mode(app, binary, proxy, certutil, path, sites, url)
+def cli(app, binary, proxy, record, certutil, sites, path):
+    mode = Mode(app, binary, proxy, certutil, path, sites)
     if record:
         mode.recording()
     else:
-        mode.replaying()
+        mode.replaying_sites()
 
 
 if __name__ == "__main__":
