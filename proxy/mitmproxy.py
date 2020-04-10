@@ -113,8 +113,8 @@ class MITMProxy404(MITMProxyBase):
                 "websocket=false",
                 "--set",
                 "upstream_cert=false",
-                "--set",
-                "server_replay_files={}".format(self.path),
+                "--set", "server_replay_files={}".format(self.path),
+                "--set", "upload_dir=" + os.path.split(os.path.abspath(self.path))[0],
             ]
         elif self.mode is "forward":
             command = [
