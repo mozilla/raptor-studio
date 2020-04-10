@@ -13,6 +13,7 @@ click-config-file = "*"
 selenium = "*"
 mozversion = "*"
 tldextract = "*"
+manifestparser = "*"
 
 [requires]
 python_version = "2.7"
