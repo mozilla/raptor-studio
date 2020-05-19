@@ -108,7 +108,60 @@ class MITMProxy404(MITMProxyBase):
             command = [
                 self.binary,
                 "--scripts",
-                os.path.join(self.scripts, "alternate-server-replay-4.0.4.py"),
+                os.path.join(self.scripts, "alternate-server-replay.py"),
+                "--set",
+                "websocket=false",
+                "--set",
+                "upstream_cert=false",
+                "--set", "server_replay_files={}".format(self.path),
+                "--set", "upload_dir=" + os.path.split(os.path.abspath(self.path))[0],
+            ]
+        elif self.mode is "forward":
+            command = [
+                self.binary,
+                "--listen-host",
+                "127.0.0.1",
+                "--listen-port",
+                "8080",
+                "--scripts",
+                os.path.join(self.scripts, "mitm_port_fw.py"),
+                "--set",
+                "portmap=80:8081,443:8082",
+                # For more information see ssl_insecure and ssl_verify_upstream_trusted_ca on
+                # https://docs.mitmproxy.org/stable/concepts-options/
+                # '--ssl-insecure',
+                "--set",
+                "ssl_verify_upstream_trusted_ca=%s"
+                % os.path.join(self.mitm_home, "mitmproxy-ca.pem"),
+            ]
+        else:
+            raise Exception("Unknown proxy mode! Proxy mode: %s" % self.mode)
+
+        return command
+
+
+class MITMProxy511(MITMProxyBase):
+    def __init__(self, path, mode="record"):
+        MITMProxyBase.__init__(self, path=path, version="5.1.1", mode=mode)
+
+    def command(self):
+        if self.mode is "record":
+            command = [
+                self.binary,
+                "--save-stream-file",
+                self.path,
+                "--set",
+                "websocket=false",
+                "--scripts",
+                os.path.join(self.scripts, "inject_deterministic.py"),
+                "--scripts",
+                os.path.join(self.scripts, "http_protocol_extractor.py"),
+            ]
+        elif self.mode is "replay":
+            command = [
+                self.binary,
+                "--scripts",
+                os.path.join(self.scripts, "alternate-server-replay.py"),
                 "--set",
                 "websocket=false",
                 "--set",

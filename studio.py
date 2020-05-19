@@ -19,7 +19,7 @@ from apps.android.firefox import (
 )
 from apps.desktop.chrome import DesktopChrome as Chrome
 from apps.desktop.firefox import DesktopFirefox as Firefox
-from proxy.mitmproxy import MITMProxy202, MITMProxy404
+from proxy.mitmproxy import MITMProxy202, MITMProxy404, MITMProxy511
 from proxy.webpagereplay import WebPageReplay
 
 APPS = {
@@ -31,7 +31,7 @@ APPS = {
     "Chrome": Chrome,
 }
 
-PROXYS = {"mitm2": MITMProxy202, "mitm4": MITMProxy404, "wpr": WebPageReplay}
+PROXYS = {"mitm2": MITMProxy202, "mitm4": MITMProxy404,"mitm5": MITMProxy511, "wpr": WebPageReplay}
 
 RECORD_TIMEOUT = 60
 
